@@ -53,31 +53,37 @@ const cards = [
 		about: 'Активных сотрудников',
 		image: green,
 		number: atWorkNumber,
+		link: './active',
 	},
 	{
 		about: 'В отпуске',
 		image: yellow,
 		number: onVacationNumber,
+		link: './vacation',
 	},
 	{
 		about: 'На больничном',
 		image: blue,
 		number: onSickLeaveNumber,
+		link: './sick',
 	},
 	{
 		about: 'В командировке',
 		image: red,
 		number: onBusinessTripNumber,
+		link: './trip',
 	},
 	{
 		about: 'Неявка',
 		image: grey,
 		number: employees.length - atWorkNumber,
+		link: './not-at-work',
 	},
 	{
 		about: 'Всего сотрудников',
 		image: add,
 		number: employees.length,
+		link: 'all',
 	},
 ]
 export default cards

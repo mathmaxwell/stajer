@@ -95,7 +95,7 @@ const ProtectedRoute = ({ children }: props) => {
 					}
 				>
 					<img src={rows} alt='rows' />
-					Мониторинг
+					База сотрудников
 				</button>
 				<button
 					className='mt-auto flex items-center justify-start gap-2'

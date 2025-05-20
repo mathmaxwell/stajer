@@ -10,6 +10,7 @@ const Monitoring = () => {
 				{cards.map((card, id) =>
 					card.image ? (
 						<li
+							onClick={() => navigate(`${card.link}`)}
 							key={id}
 							className='bg-white shadow w-full h-full rounded-2xl px-3 py-2.5 flex flex-col justify-between items-start'
 							style={{ fontSize: 18, fontWeight: 500 }}
@@ -98,7 +99,7 @@ const Monitoring = () => {
 												key={id}
 												className='flex justify-between items-center w-80 relative  gap-2 before:content-[""] before:w-full before:h-0.25 before:bg-gray-400 before:absolute before:bottom-0'
 											>
-												<div className='flex items-center justify-start'>
+												<div className='flex items-center justify-start gap-2'>
 													<p>{user.firstName}</p>
 													<p>{user.lastName}</p>
 												</div>
@@ -125,7 +126,7 @@ const Monitoring = () => {
 										key={id}
 										className='flex justify-between items-center w-80 relative  gap-2 before:content-[""] before:w-full before:h-0.25 before:bg-gray-400 before:absolute before:bottom-0'
 									>
-										<div className='flex items-center justify-start'>
+										<div className='flex items-center justify-start gap-2'>
 											<p>{user.firstName}</p>
 											<p>{user.lastName}</p>
 										</div>
