@@ -1,5 +1,9 @@
+import { useNavigate } from 'react-router-dom'
 import cards from '../elements/monitoringCards'
+import employees from '../employees/employees'
+
 const Monitoring = () => {
+	const navigate = useNavigate()
 	return (
 		<div className='flex flex-col w-full h-full gap-5 bg-gray-200'>
 			<ul className='h-1/5 rounded-2xl flex items-center justify-between gap-5 '>
@@ -71,12 +75,12 @@ const Monitoring = () => {
 					</div>
 				</div>
 			</div>
-			<div className='h-2/5 rounded-2xl w-full flex items-center justify-between gap-5'>
+			<div className='h-2/5 rounded-2xl w-full flex justify-between items-center gap-5'>
 				<div className='bg-white w-full h-full rounded-2xl shadow py-3 px-5'>
 					<p style={{ fontWeight: 500, fontSize: 18 }}>
 						Эмоциональное состояние сотрудников
 					</p>
-					<div className='flex items-center justify-between'>
+					<div className='flex items-center justify-between gap-2'>
 						<div
 							style={{
 								background: 'red',
@@ -85,11 +89,54 @@ const Monitoring = () => {
 								borderRadius: '50%',
 							}}
 						></div>
-						<div></div>
+						<div className='flex flex-col items-center justify-between gap-8'>
+							<ul className='flex flex-col items-start justify-between gap-2'>
+								{employees.map(
+									(user, id) =>
+										id < 5 && (
+											<li
+												key={id}
+												className='flex justify-between items-center w-80 relative  gap-2 before:content-[""] before:w-full before:h-0.25 before:bg-gray-400 before:absolute before:bottom-0'
+											>
+												<div className='flex items-center justify-start'>
+													<p>{user.firstName}</p>
+													<p>{user.lastName}</p>
+												</div>
+												<p>{user.mood}</p>
+											</li>
+										)
+								)}
+							</ul>
+							<button onClick={() => navigate('/all-mood')}>
+								Посмотреть всех
+							</button>
+						</div>
 					</div>
 				</div>
-				<div className='bg-white w-full h-full rounded-2xl shadow py-3 px-5'>
-					2
+				<div className='bg-white w-full h-full rounded-2xl shadow py-3 px-5 flex flex-col items-center justify-between'>
+					<p style={{ fontWeight: 500, fontSize: 18, marginRight: 'auto' }}>
+						День рождение сотрудников
+					</p>
+					<ul className='flex flex-col items-start justify-between gap-2'>
+						{employees.map(
+							(user, id) =>
+								id < 5 && (
+									<li
+										key={id}
+										className='flex justify-between items-center w-80 relative  gap-2 before:content-[""] before:w-full before:h-0.25 before:bg-gray-400 before:absolute before:bottom-0'
+									>
+										<div className='flex items-center justify-start'>
+											<p>{user.firstName}</p>
+											<p>{user.lastName}</p>
+										</div>
+										<p>{user.birthday}</p>
+									</li>
+								)
+						)}
+					</ul>
+					<button onClick={() => navigate('/all-birthday')}>
+						Посмотреть всех
+					</button>
 				</div>
 			</div>
 		</div>

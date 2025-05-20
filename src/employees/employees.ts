@@ -1,4 +1,16 @@
-const employees = [
+interface IEmployees {
+	firstName: string
+	lastName: string
+	atWork: boolean
+	onVacation: boolean
+	onSickLeave: boolean
+	onBusinessTrip: boolean
+	birthday: string
+	mood: number
+	lateArrivals: Record<string, number>
+}
+
+const employees: IEmployees[] = [
 	{
 		firstName: 'Алексей',
 		lastName: 'Иванов',
@@ -214,5 +226,22 @@ const employees = [
 		},
 	},
 ]
+function sortByUpcomingBirthdays(obj: IEmployees[]) {
+	const today = new Date()
+	const currentMonth = today.getMonth()
+	const currentDay = today.getDate()
+	return obj.slice().sort((a, b) => {
+		const [_, monthA, dayA] = a.birthday.split('-').map(Number)
+		const [__, monthB, dayB] = b.birthday.split('-').map(Number)
+		const offsetA =
+			(monthA - currentMonth + 12) % 12 || (dayA >= currentDay ? 0 : 12)
+		const offsetB =
+			(monthB - currentMonth + 12) % 12 || (dayB >= currentDay ? 0 : 12)
+		if (offsetA !== offsetB) {
+			return offsetA - offsetB
+		}
+		return dayA - dayB
+	})
+}
 
-export default employees
+export default sortByUpcomingBirthdays(employees)

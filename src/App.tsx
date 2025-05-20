@@ -7,6 +7,8 @@ import Register from './components/register'
 import useStore from './elements/setHomePage'
 import Monitoring from './components/monitoring'
 import Base from './components/base'
+import AllMood from './components/allMood'
+import AllBirthday from './components/AllBirthday'
 
 function App() {
 	const { page } = useStore()
@@ -37,6 +39,8 @@ function App() {
 						</RegisterLayOut>
 					}
 				/>
+				<Route path='/all-mood' element={<AllMood />} />
+				<Route path='/all-birthday' element={<AllBirthday />} />
 			</Routes>
 		</>
 	)
