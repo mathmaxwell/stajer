@@ -4,12 +4,23 @@ import ProtectedRoute from './layouts/ProtectedRoute'
 import SignIn from './components/signIn'
 import RegisterLayOut from './layouts/registerLayOut'
 import Register from './components/register'
+import useStore from './elements/setHomePage'
+import Monitoring from './components/monitoring'
+import Base from './components/base'
 
 function App() {
+	const { page } = useStore()
 	return (
 		<>
 			<Routes>
-				<Route path='/' element={<ProtectedRoute>props</ProtectedRoute>} />
+				<Route
+					path='/'
+					element={
+						<ProtectedRoute>
+							{page === 'monitoring' ? <Monitoring /> : <Base />}
+						</ProtectedRoute>
+					}
+				/>
 				<Route
 					path='/sign-in'
 					element={

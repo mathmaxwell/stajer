@@ -9,22 +9,35 @@ import apps from '../images/apps.svg'
 import rows from '../images/rows.svg'
 import exit from '../images/exit.svg'
 import type { ReactNode } from 'react'
+import useLang from '../lang/lang'
+import useStore from '../elements/setHomePage'
 interface props {
 	children: ReactNode
 }
+
 const ProtectedRoute = ({ children }: props) => {
-	const [page, setPage] = useState('monitoring')
-	const [lang, setLang] = useState(true) //zustanga joylash kk
+	const { page, setPage } = useStore()
 	const navigate = useNavigate()
+	async function exitOfSystem() {
+		try {
+			const exitFunction = await pb.authStore.clear()
+			navigate('/sign-in')
+		} catch (error) {
+			console.log(error)
+		}
+		localStorage.setItem('pocketbase_auth', '')
+	}
+
+	const { lang, setLang } = useLang()
+
 	useEffect(() => {
-		if (pb.authStore.model) {
-			//shu joyiga ! qaytarilsin
+		if (!pb.authStore.model) {
 			navigate('/sign-in')
 		}
 	}, [])
-	if (pb.authStore.model) return null //shu joyga ham, pb dan oldin
+	if (!pb.authStore.model) return null
 	return (
-		<div className='h-screen flex items-center justify-between gap-5 p-5 bg-gray-200'>
+		<div className='h-screen flex items-center justify-between gap-5 p-5 bg-gray-200 shadow'>
 			<Box
 				sx={{
 					width: 300,
@@ -49,8 +62,8 @@ const ProtectedRoute = ({ children }: props) => {
 						TAD <br />
 						INDUSTRIES
 					</h3>
-					<button className='ml-auto' onClick={() => setLang(prev => !prev)}>
-						<img src={lang ? uz : ru} alt='flag' />
+					<button className='ml-auto' onClick={() => setLang()}>
+						<img src={lang === 'uz' ? uz : ru} alt='flag' />
 					</button>
 				</div>
 				<h3 style={{ color: 'rgba(6, 186, 209, 1)', fontSize: 17 }}>FaceIDS</h3>
@@ -84,7 +97,10 @@ const ProtectedRoute = ({ children }: props) => {
 					<img src={rows} alt='rows' />
 					Мониторинг
 				</button>
-				<button className='mt-auto flex items-center justify-start gap-2'>
+				<button
+					className='mt-auto flex items-center justify-start gap-2'
+					onClick={exitOfSystem}
+				>
 					<img src={exit} alt='exit' /> Выход
 				</button>
 			</Box>

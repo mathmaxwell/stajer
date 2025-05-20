@@ -1,16 +1,26 @@
 import { useForm } from 'react-hook-form'
 import { TextField } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import pb from '../lib/pocketbase'
 const SignIn = () => {
 	type formData = {
 		login: string
 		password: string
 	}
-	const { register, handleSubmit, watch } = useForm<formData>()
-	function onSubmit(data: formData) {
-		console.log(data)
-	}
 	const navigate = useNavigate()
+	const { register, handleSubmit, watch } = useForm<formData>()
+	const userId = pb.authStore.model?.id
+	async function onSubmit(data: formData) {
+		try {
+			const user = await pb
+				.collection('users')
+				.authWithPassword(data.login, data.password)
+			navigate('/')
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	const login = watch('login')
 	const password = watch('password')
 	return (

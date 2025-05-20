@@ -3,19 +3,33 @@ import { InputAdornment, TextField } from '@mui/material'
 import RemoveRedEyeTwoToneIcon from '@mui/icons-material/RemoveRedEyeTwoTone'
 import DisabledVisibleTwoToneIcon from '@mui/icons-material/DisabledVisibleTwoTone'
 import { useState } from 'react'
+import pb from '../lib/pocketbase'
+import { useNavigate } from 'react-router-dom'
 const Register = () => {
+	const navigate = useNavigate()
 	type formData = {
-		login: string
+		username: string
 		password: string
 		email: string
 	}
 	const [showPassword, setShowPassword] = useState(false)
 	const { register, handleSubmit, watch } = useForm<formData>()
-	function onSubmit(data: formData) {
-		console.log(data)
+	async function onSubmit(data: formData) {
+		try {
+			const newUser = await pb.collection('users').create({
+				email: data.email,
+				username: data.username,
+				password: data.password,
+				passwordConfirm: data.password,
+			})
+			alert('profil yaratildi')
+			navigate('/sign-in')
+		} catch (error) {
+			console.log(error)
+		}
 	}
 	const email = watch('email')
-	const login = watch('login')
+	const login = watch('username')
 	const password = watch('password')
 	return (
 		<form
@@ -28,7 +42,7 @@ const Register = () => {
 				variant='outlined'
 				type='text'
 				className='w-full '
-				{...register('login')}
+				{...register('username')}
 			/>
 			<TextField
 				label='email'
