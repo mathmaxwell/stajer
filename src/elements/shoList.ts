@@ -25,7 +25,7 @@ const defaultList: IListStory['list'] = {
 	lastName: true,
 	position: true,
 	mood: true,
-	department: true,
+	department: false,
 	birthday: false,
 	atWork: false,
 	onVacation: false,

@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import employees from '../employees/employees'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-
 import listStory from '../elements/shoList'
+import lang from '../lang/language'
 const Base = () => {
 	const { list } = listStory()
 	const [page, setPage] = useState(0)
@@ -18,19 +17,53 @@ const Base = () => {
 			>
 				{Object.entries(list)
 					.filter(([_, show]) => show)
-					.map(([label], id) => (
-						<li className='flex items-center justify-center' key={id}>
-							{label}
-						</li>
-					))}
-			</ul>
-			{employees.slice(page * 10, page * 10 + 9).map((human, id) => (
-				<ul className='grid grid-cols-6 ' key={id}>
-					{Object.entries(list).map(
-						([element, isTrue], id) =>
-							isTrue && (
+					.map(
+						([label], id) =>
+							lang[label] && (
 								<li className='flex items-center justify-center' key={id}>
-									{isTrue && <li>{human.gender}</li>}
+									{lang[label]}
+								</li>
+							)
+					)}
+			</ul>
+			{employees.slice(page * 10, page * 10 + 9).map((human, index) => (
+				<ul className='grid grid-cols-6' key={human.ID || index}>
+					{Object.entries(list).map(
+						([element, isTrue], columnIndex) =>
+							isTrue && (
+								<li
+									className='flex items-center justify-center text-center'
+									key={`${human.ID || index}-${element}-${columnIndex}`}
+								>
+									{element === 'image' ? (
+										<img
+											className='w-10 h-10 rounded-full'
+											src={human[element] || '/default-image.png'}
+											alt={`${human.firstName || 'employee'} avatar`}
+										/>
+									) : (
+										<p>
+											{(() => {
+												const value = human[element]
+												if (value === null || value === undefined) {
+													return 'N/A'
+												}
+												if (
+													typeof value === 'object' &&
+													!Array.isArray(value)
+												) {
+													return JSON.stringify(value)
+												}
+												if (Array.isArray(value)) {
+													return value.join(', ')
+												}
+												if (typeof value === 'boolean') {
+													return value.toString()
+												}
+												return value
+											})()}
+										</p>
+									)}
 								</li>
 							)
 					)}
