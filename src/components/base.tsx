@@ -44,23 +44,16 @@ const Base = () => {
 									) : (
 										<p>
 											{(() => {
-												const value = human[element]
-												if (value === null || value === undefined) {
-													return 'N/A'
-												}
-												if (
-													typeof value === 'object' &&
-													!Array.isArray(value)
-												) {
-													return JSON.stringify(value)
-												}
-												if (Array.isArray(value)) {
-													return value.join(', ')
-												}
+												const value = human[element as keyof typeof human]
 												if (typeof value === 'boolean') {
+													return value ? 'Да' : 'Нет'
+												}
+												if (typeof value === 'number') {
 													return value.toString()
 												}
-												return value
+												if (typeof value === 'string') {
+													return value
+												}
 											})()}
 										</p>
 									)}
