@@ -22,6 +22,7 @@ const ProtectedRoute = ({ children }: props) => {
 		try {
 			const exitFunction = await pb.authStore.clear()
 			navigate('/sign-in')
+			console.log(exitFunction)
 		} catch (error) {
 			console.log(error)
 		}
@@ -68,7 +69,10 @@ const ProtectedRoute = ({ children }: props) => {
 				</div>
 				<h3 style={{ color: 'rgba(6, 186, 209, 1)', fontSize: 17 }}>FaceIDS</h3>
 				<button
-					onClick={() => setPage('monitoring')}
+					onClick={() => {
+						setPage('monitoring')
+						navigate('/')
+					}}
 					className='flex items-center justify-start gap-2 p-3 rounded-lg'
 					style={
 						page === 'monitoring'
@@ -84,7 +88,10 @@ const ProtectedRoute = ({ children }: props) => {
 				</button>
 				<button
 					className='flex items-center justify-start gap-2 p-3 rounded-lg'
-					onClick={() => setPage('base')}
+					onClick={() => {
+						setPage('base')
+						navigate('/base')
+					}}
 					style={
 						page === 'base'
 							? {

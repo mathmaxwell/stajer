@@ -1,8 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import cards from '../elements/monitoringCards'
 import employees from '../employees/employees'
+import useStore from '../elements/setHomePage'
+import listStory from '../elements/shoList'
 
 const Monitoring = () => {
+	const { setList } = listStory()
+	const { setPage } = useStore()
 	const navigate = useNavigate()
 	return (
 		<div className='flex flex-col w-full h-full gap-5 bg-gray-200'>
@@ -10,7 +14,11 @@ const Monitoring = () => {
 				{cards.map((card, id) =>
 					card.image ? (
 						<li
-							onClick={() => navigate(`${card.link}`)}
+							onClick={() => {
+								setPage('base')
+								navigate(`${card.link}`)
+								setList(card.object)
+							}}
 							key={id}
 							className='bg-white shadow w-full h-full rounded-2xl px-3 py-2.5 flex flex-col justify-between items-start'
 							style={{ fontSize: 18, fontWeight: 500 }}
@@ -108,7 +116,12 @@ const Monitoring = () => {
 										)
 								)}
 							</ul>
-							<button onClick={() => navigate('/all-mood')}>
+							<button
+								onClick={() => {
+									navigate('base/all-mood')
+									setPage('base')
+								}}
+							>
 								Посмотреть всех
 							</button>
 						</div>
@@ -135,7 +148,12 @@ const Monitoring = () => {
 								)
 						)}
 					</ul>
-					<button onClick={() => navigate('/all-birthday')}>
+					<button
+						onClick={() => {
+							navigate('/base/all-birthday')
+							setPage('base')
+						}}
+					>
 						Посмотреть всех
 					</button>
 				</div>

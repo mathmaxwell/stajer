@@ -4,20 +4,10 @@ import ProtectedRoute from './layouts/ProtectedRoute'
 import SignIn from './components/signIn'
 import RegisterLayOut from './layouts/registerLayOut'
 import Register from './components/register'
-import useStore from './elements/setHomePage'
 import Monitoring from './components/monitoring'
 import Base from './components/base'
-import AllMood from './components/allMood'
-import AllBirthday from './components/AllBirthday'
-import Active from './components/active'
-import Vacation from './components/vacation'
-import Sick from './components/sick'
-import Trip from './components/trip'
-import NotAtWork from './components/notAtWork'
-import All from './components/all'
-
 function App() {
-	const { page } = useStore()
+
 	return (
 		<>
 			<Routes>
@@ -25,7 +15,23 @@ function App() {
 					path='/'
 					element={
 						<ProtectedRoute>
-							{page === 'monitoring' ? <Monitoring /> : <Base />}
+							<Monitoring />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path='/base'
+					element={
+						<ProtectedRoute>
+							<Base />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path='/base/:id'
+					element={
+						<ProtectedRoute>
+							<Base />
 						</ProtectedRoute>
 					}
 				/>
@@ -45,14 +51,6 @@ function App() {
 						</RegisterLayOut>
 					}
 				/>
-				<Route path='/all-mood' element={<AllMood />} />
-				<Route path='/all-birthday' element={<AllBirthday />} />
-				<Route path='/active' element={<Active />} />
-				<Route path='/vacation' element={<Vacation />} />
-				<Route path='/sick' element={<Sick />} />
-				<Route path='/trip' element={<Trip />} />
-				<Route path='/not-at-work' element={<NotAtWork />} />
-				<Route path='/all' element={<All />} />
 			</Routes>
 		</>
 	)

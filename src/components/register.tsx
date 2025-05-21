@@ -22,6 +22,8 @@ const Register = () => {
 				password: data.password,
 				passwordConfirm: data.password,
 			})
+			console.log(newUser)
+
 			alert('profil yaratildi')
 			navigate('/sign-in')
 		} catch (error) {
