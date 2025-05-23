@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import employees from '../employees/employees'
+import baseStory from '../employees/baseStory'
+
 const Base = () => {
+	const { baseList } = baseStory()
 	const [page, setPage] = useState(0)
 	return (
 		<div className='grid grid-rows-11 h-full rounded-2xl relative'>
@@ -11,9 +14,38 @@ const Base = () => {
 					fontWeight: 400,
 				}}
 				className={`grid grid-cols-6 text-black rounded-t-2xl`}
-			></ul>
-			{employees.slice(page * 10, page * 10 + 9).map((human, index) => (
-				<ul className='grid grid-cols-6' key={human.ID || index}></ul>
+			>
+				{baseList.map((item, index) => (
+					<li
+						key={index}
+						className='flex items-center justify-center text-center'
+						style={{
+							color: 'rgba(100, 109, 126, 1)',
+							fontSize: 17,
+							fontWeight: 600,
+						}}
+					>
+						{item}
+					</li>
+				))}
+			</ul>
+
+			{employees.slice(page * 10, page * 10 + 9).map(human => (
+				<ul className='grid grid-cols-6' key={human.ID}>
+					{baseList.map(item =>
+						item === 'image' ? (
+							<img
+								className='w-10 h-10 rounded-full'
+								src={human[item]}
+								alt={item}
+							/>
+						) : (
+							<li className='flex items-center justify-center text-center'>
+								{human[item]}
+							</li>
+						)
+					)}
+				</ul>
 			))}
 			<div className='flex items-center justify-center gap-10 absolute bottom-0 left-1/2 right-1/2'>
 				<button
