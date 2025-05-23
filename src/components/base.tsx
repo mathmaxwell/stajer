@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import employees from '../employees/employees'
-import listStory from '../elements/shoList'
-import lang from '../lang/language'
 const Base = () => {
-	const { list } = listStory()
 	const [page, setPage] = useState(0)
 	return (
 		<div className='grid grid-rows-11 h-full rounded-2xl relative'>
@@ -14,53 +11,9 @@ const Base = () => {
 					fontWeight: 400,
 				}}
 				className={`grid grid-cols-6 text-black rounded-t-2xl`}
-			>
-				{Object.entries(list)
-					.filter(([_, show]) => show)
-					.map(
-						([label], id) =>
-							lang[label] && (
-								<li className='flex items-center justify-center' key={id}>
-									{lang[label]}
-								</li>
-							)
-					)}
-			</ul>
+			></ul>
 			{employees.slice(page * 10, page * 10 + 9).map((human, index) => (
-				<ul className='grid grid-cols-6' key={human.ID || index}>
-					{Object.entries(list).map(
-						([element, isTrue], columnIndex) =>
-							isTrue && (
-								<li
-									className='flex items-center justify-center text-center'
-									key={`${human.ID || index}-${element}-${columnIndex}`}
-								>
-									{element === 'image' ? (
-										<img
-											className='w-10 h-10 rounded-full'
-											src={human[element] || '/default-image.png'}
-											alt={`${human.firstName || 'employee'} avatar`}
-										/>
-									) : (
-										<p>
-											{(() => {
-												const value = human[element as keyof typeof human]
-												if (typeof value === 'boolean') {
-													return value ? 'Да' : 'Нет'
-												}
-												if (typeof value === 'number') {
-													return value.toString()
-												}
-												if (typeof value === 'string') {
-													return value
-												}
-											})()}
-										</p>
-									)}
-								</li>
-							)
-					)}
-				</ul>
+				<ul className='grid grid-cols-6' key={human.ID || index}></ul>
 			))}
 			<div className='flex items-center justify-center gap-10 absolute bottom-0 left-1/2 right-1/2'>
 				<button

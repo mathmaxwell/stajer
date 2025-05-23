@@ -2,10 +2,10 @@ import { useNavigate } from 'react-router-dom'
 import cards from '../elements/monitoringCards'
 import employees from '../employees/employees'
 import useStore from '../elements/setHomePage'
-import listStory from '../elements/shoList'
+
 
 const Monitoring = () => {
-	const { setList } = listStory()
+
 	const { setPage } = useStore()
 	const navigate = useNavigate()
 	return (
@@ -17,7 +17,7 @@ const Monitoring = () => {
 							onClick={() => {
 								setPage('base')
 								navigate(`${card.link}`)
-								setList(card.object)
+
 							}}
 							key={id}
 							className='bg-white shadow w-full h-full rounded-2xl px-3 py-2.5 flex flex-col justify-between items-start'
