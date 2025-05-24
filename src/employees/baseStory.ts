@@ -1,12 +1,7 @@
 import { create } from 'zustand'
-import type { IEmployees } from '../employees/employees'
+import type { IEmployees } from '../types/types'
 
-type ExcludedKeys =
-	| 'atWork'
-	| 'onVacation'
-	| 'onSickLeave'
-	| 'onBusinessTrip'
-	| 'lateArrivals'
+type ExcludedKeys = 'lateArrivals'
 type AllowedBaseListKeys = Exclude<keyof IEmployees, ExcludedKeys>
 
 interface BaseStore {
@@ -15,11 +10,10 @@ interface BaseStore {
 }
 
 const defaultBaseList: AllowedBaseListKeys[] = [
-	'ID',
 	'image',
-	'firstName',
+	'fullName',
 	'mood',
-	'department',
+	'Department',
 	'birthday',
 ]
 

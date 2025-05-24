@@ -2,35 +2,24 @@ import { useNavigate } from 'react-router-dom'
 import cards from '../elements/monitoringCards'
 import employees from '../employees/employees'
 import useStore from '../elements/setHomePage'
-
+import type { IEmployees } from '../types/types'
+import { useEffect, useState } from 'react'
 
 const Monitoring = () => {
-
+	const [array, setArray] = useState<IEmployees[]>([])
+	useEffect(() => {
+		const fetch = async () => {
+			const data = (await employees()) || []
+			setArray(data)
+		}
+		fetch()
+	}, [])
 	const { setPage } = useStore()
 	const navigate = useNavigate()
 	return (
 		<div className='flex flex-col w-full h-full gap-5 bg-gray-200'>
 			<ul className='h-1/5 rounded-2xl flex items-center justify-between gap-5 '>
-				{cards.map((card, id) =>
-					card.image ? (
-						<li
-							onClick={() => {
-								setPage('base')
-								navigate(`${card.link}`)
-
-							}}
-							key={id}
-							className='bg-white shadow w-full h-full rounded-2xl px-3 py-2.5 flex flex-col justify-between items-start'
-							style={{ fontSize: 18, fontWeight: 500 }}
-						>
-							{card.about}
-							<div className='flex justify-between items-center w-full'>
-								<p>{card.number}</p>
-								<img src={card.image} alt='image' />
-							</div>
-						</li>
-					) : null
-				)}
+				<li>card</li>
 			</ul>
 			<div
 				style={{
@@ -44,32 +33,30 @@ const Monitoring = () => {
 						Мониторинг опозданий
 					</h4>
 					<div className='flex items-center justify-start gap-4'>
-						<p style={{ fontSize: 36, fontWeight: 600 }}>
-							{cards[0].lateArrivalsNumber}{' '}
-						</p>
+						<p style={{ fontSize: 36, fontWeight: 600 }}>son</p>
 						<p style={{ fontWeight: 400, fontSize: 16 }}>
 							Опозданий <br /> За последние 7 дней
 						</p>
 					</div>
 				</div>
-				{cards[1].result && (
-					<ul className='h-full'>
-						<li>пн:{cards[1].result[1].length}</li>
-						<li>вт:{cards[1].result[2].length}</li>
-						<li>ср:{cards[1].result[3].length}</li>
-						<li>чт:{cards[1].result[4].length}</li>
-						<li>пт:{cards[1].result[5].length}</li>
-						<li>сб:{cards[1].result[6].length}</li>
-						<li>вс:{cards[1].result[0].length}</li>
-					</ul>
-				)}
+
+				<ul className='h-full'>
+					<li>пн:sonlar</li>
+					<li>вт:sonlar</li>
+					<li>ср:sonlar</li>
+					<li>чт:sonlar</li>
+					<li>пт:sonlar</li>
+					<li>сб:sonlar</li>
+					<li>вс:sonlar</li>
+				</ul>
+
 				<div className='h-full flex flex-col gap-3'>
 					<div className='bg-white shadow rounded-2xl py-3 px-4'>
 						<p style={{ fontWeight: 500, fontSize: 18 }}>
 							Потерянных часов за день
 						</p>
 						<p style={{ fontSize: 36, fontWeight: 600 }}>
-							{cards[3].atDay}{' '}
+							atDay son
 							<span style={{ fontSize: 20, fontWeight: 400 }}>час</span>
 						</p>
 					</div>
@@ -78,7 +65,7 @@ const Monitoring = () => {
 							Потерянных часов за неделю
 						</p>
 						<p style={{ fontSize: 36, fontWeight: 600 }}>
-							{cards[2].allTime}{' '}
+							hama vaqt
 							<span style={{ fontSize: 20, fontWeight: 400 }}>час</span>
 						</p>
 					</div>
@@ -100,7 +87,7 @@ const Monitoring = () => {
 						></div>
 						<div className='flex flex-col items-center justify-between gap-8'>
 							<ul className='flex flex-col items-start justify-between gap-2'>
-								{employees.map(
+								{array.map(
 									(user, id) =>
 										id < 5 && (
 											<li
@@ -108,8 +95,7 @@ const Monitoring = () => {
 												className='flex justify-between items-center w-80 relative  gap-2 before:content-[""] before:w-full before:h-0.25 before:bg-gray-400 before:absolute before:bottom-0'
 											>
 												<div className='flex items-center justify-start gap-2'>
-													<p>{user.firstName}</p>
-													<p>{user.lastName}</p>
+													<p>{user.fullName}</p>
 												</div>
 												<p>{user.mood}</p>
 											</li>
@@ -132,7 +118,7 @@ const Monitoring = () => {
 						День рождение сотрудников
 					</p>
 					<ul className='flex flex-col items-start justify-between gap-2'>
-						{employees.map(
+						{array.map(
 							(user, id) =>
 								id < 5 && (
 									<li
@@ -140,8 +126,7 @@ const Monitoring = () => {
 										className='flex justify-between items-center w-80 relative  gap-2 before:content-[""] before:w-full before:h-0.25 before:bg-gray-400 before:absolute before:bottom-0'
 									>
 										<div className='flex items-center justify-start gap-2'>
-											<p>{user.firstName}</p>
-											<p>{user.lastName}</p>
+											<p>{user.fullName}</p>
 										</div>
 										<p>{user.birthday}</p>
 									</li>

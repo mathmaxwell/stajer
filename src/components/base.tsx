@@ -1,12 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import employees from '../employees/employees'
 import baseStory from '../employees/baseStory'
-
+import { useNavigate } from 'react-router-dom'
+import type { IEmployees } from '../types/types'
 const Base = () => {
+	const [array, setArray] = useState<IEmployees[]>([])
+
+	useEffect(() => {
+		const fetch = async () => {
+			const data = (await employees()) || []
+			setArray(data)
+		}
+		fetch()
+	}, [])
 	const { baseList } = baseStory()
 	const [page, setPage] = useState(0)
+	const navigate = useNavigate()
 	return (
 		<div className='grid grid-rows-11 h-full rounded-2xl relative'>
+			<button onClick={() => navigate('/add-employees')}>click</button>
 			<ul
 				style={{
 					backgroundColor: 'rgba(235, 249, 251, 1)',
@@ -30,20 +42,16 @@ const Base = () => {
 				))}
 			</ul>
 
-			{employees.slice(page * 10, page * 10 + 9).map(human => (
-				<ul className='grid grid-cols-6' key={human.ID}>
+			{array.slice(page * 10, page * 10 + 9).map(human => (
+				<ul className='grid grid-cols-6' key={human.passport}>
 					{baseList.map(item =>
 						item === 'image' ? (
 							<img
 								className='w-10 h-10 rounded-full'
-								src={human[item]}
+								src={human.imageUrl}
 								alt={item}
 							/>
-						) : (
-							<li className='flex items-center justify-center text-center'>
-								{human[item]}
-							</li>
-						)
+						) : null
 					)}
 				</ul>
 			))}

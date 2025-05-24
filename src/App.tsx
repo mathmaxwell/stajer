@@ -6,8 +6,8 @@ import RegisterLayOut from './layouts/registerLayOut'
 import Register from './components/register'
 import Monitoring from './components/monitoring'
 import Base from './components/base'
+import AddEmployees from './components/addEmployees'
 function App() {
-
 	return (
 		<>
 			<Routes>
@@ -51,6 +51,7 @@ function App() {
 						</RegisterLayOut>
 					}
 				/>
+				<Route path='/add-employees' element={<AddEmployees />} />
 			</Routes>
 		</>
 	)
