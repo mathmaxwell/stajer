@@ -11,6 +11,7 @@ import exit from '../images/exit.svg'
 import type { ReactNode } from 'react'
 import useLang from '../lang/lang'
 import useStore from '../elements/setHomePage'
+import { langUz, langRu } from '../lang/language'
 interface props {
 	children: ReactNode
 }
@@ -84,7 +85,7 @@ const ProtectedRoute = ({ children }: props) => {
 					}
 				>
 					<img src={apps} alt='apps' />
-					Мониторинг
+					{lang === 'uz' ? langUz.monitoring : langRu.monitoring}
 				</button>
 				<button
 					className='flex items-center justify-start gap-2 p-3 rounded-lg'
@@ -102,13 +103,14 @@ const ProtectedRoute = ({ children }: props) => {
 					}
 				>
 					<img src={rows} alt='rows' />
-					База сотрудников
+					{lang === 'uz' ? langUz.baseEmployees : langRu.baseEmployees}
 				</button>
 				<button
 					className='mt-auto flex items-center justify-start gap-2'
 					onClick={exitOfSystem}
 				>
-					<img src={exit} alt='exit' /> Выход
+					<img src={exit} alt='exit' />
+					<p>{lang === 'uz' ? langUz.exit : langRu.exit}</p>
 				</button>
 			</Box>
 			<Box

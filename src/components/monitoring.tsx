@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom'
-import cards from '../elements/monitoringCards'
 import employees from '../employees/employees'
 import useStore from '../elements/setHomePage'
 import type { IEmployees } from '../types/types'
 import { useEffect, useState } from 'react'
+import useLang from '../lang/lang'
+import { langRu, langUz } from '../lang/language'
 
 const Monitoring = () => {
+	const { lang } = useLang()
 	const [array, setArray] = useState<IEmployees[]>([])
 	useEffect(() => {
 		const fetch = async () => {
@@ -30,12 +32,20 @@ const Monitoring = () => {
 			>
 				<div className='h-full'>
 					<h4 style={{ fontSize: 18, fontWeight: 500 }}>
-						Мониторинг опозданий
+						{lang === 'uz'
+							? langUz.monitoringLateness
+							: langRu.monitoringLateness}
 					</h4>
 					<div className='flex items-center justify-start gap-4'>
 						<p style={{ fontSize: 36, fontWeight: 600 }}>son</p>
 						<p style={{ fontWeight: 400, fontSize: 16 }}>
-							Опозданий <br /> За последние 7 дней
+							{lang === 'uz'
+								? langUz.latenessInLastDays_part1
+								: langRu.latenessInLastDays_part1}{' '}
+							<strong>nomer qo'yilsin</strong>
+							{lang === 'uz'
+								? langUz.latenessInLastDays_part2
+								: langRu.latenessInLastDays_part2}
 						</p>
 					</div>
 				</div>
@@ -53,7 +63,7 @@ const Monitoring = () => {
 				<div className='h-full flex flex-col gap-3'>
 					<div className='bg-white shadow rounded-2xl py-3 px-4'>
 						<p style={{ fontWeight: 500, fontSize: 18 }}>
-							Потерянных часов за день
+							{lang === 'uz' ? langUz.lostHoursPerDay : langRu.lostHoursPerDay}
 						</p>
 						<p style={{ fontSize: 36, fontWeight: 600 }}>
 							atDay son
@@ -62,7 +72,9 @@ const Monitoring = () => {
 					</div>
 					<div className='bg-white shadow rounded-2xl py-3 px-4'>
 						<p style={{ fontWeight: 500, fontSize: 18 }}>
-							Потерянных часов за неделю
+							{lang === 'uz'
+								? langUz.lostHoursPerWeek
+								: langRu.lostHoursPerWeek}
 						</p>
 						<p style={{ fontSize: 36, fontWeight: 600 }}>
 							hama vaqt
@@ -74,7 +86,7 @@ const Monitoring = () => {
 			<div className='h-2/5 rounded-2xl w-full flex justify-between items-center gap-5'>
 				<div className='bg-white w-full h-full rounded-2xl shadow py-3 px-5'>
 					<p style={{ fontWeight: 500, fontSize: 18 }}>
-						Эмоциональное состояние сотрудников
+						{lang === 'uz' ? langUz.employeesMood : langRu.employeesMood}
 					</p>
 					<div className='flex items-center justify-between gap-2'>
 						<div
@@ -108,14 +120,14 @@ const Monitoring = () => {
 									setPage('base')
 								}}
 							>
-								Посмотреть всех
+								{lang === 'uz' ? langUz.viewAll : langRu.viewAll}
 							</button>
 						</div>
 					</div>
 				</div>
 				<div className='bg-white w-full h-full rounded-2xl shadow py-3 px-5 flex flex-col items-center justify-between'>
 					<p style={{ fontWeight: 500, fontSize: 18, marginRight: 'auto' }}>
-						День рождение сотрудников
+						{lang === 'uz' ? langUz.birthdays : langRu.birthdays}
 					</p>
 					<ul className='flex flex-col items-start justify-between gap-2'>
 						{array.map(
@@ -139,7 +151,7 @@ const Monitoring = () => {
 							setPage('base')
 						}}
 					>
-						Посмотреть всех
+						{lang === 'uz' ? langUz.viewAll : langRu.viewAll}
 					</button>
 				</div>
 			</div>

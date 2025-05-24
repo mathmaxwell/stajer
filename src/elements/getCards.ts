@@ -1,4 +1,3 @@
-
 import type { IEmployees } from '../types/types'
 import green from '../images/green.png'
 import yellow from '../images/yellow.png'
@@ -9,14 +8,12 @@ import add from '../images/all.png'
 import employees from '../employees/employees'
 
 export async function getCardsData() {
-	const employeesArray: IEmployees[] = await employees() || []
+	const employeesArray: IEmployees[] = (await employees()) || []
 
 	let atWorkNumber = 0
 	let onBusinessTripNumber = 0
 	let onSickLeaveNumber = 0
 	let onVacationNumber = 0
-	let lateArrivalsNumber = 0
-	let allTime = 0
 
 	for (const human of employeesArray) {
 		switch (human.where) {
@@ -34,8 +31,6 @@ export async function getCardsData() {
 				break
 		}
 	}
-
-	const atDay = Math.floor(allTime / 7)
 
 	const cards = [
 		{

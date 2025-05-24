@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import pb from '../lib/pocketbase'
 import type { RecordModel } from 'pocketbase'
 
@@ -27,7 +26,6 @@ const AddEmployees = () => {
 		where: string
 	}
 
-	const [employe, setEmploe] = useState<Employee[]>([])
 	async function getImage() {
 		const employees: RecordModel[] = await pb
 			.collection('employees')
@@ -49,14 +47,13 @@ const AddEmployees = () => {
 			Nationality: record.Nationality,
 			NationalityCode: record.NationalityCode,
 			CountryCode: record.CountryCode,
-			birthCode: record.birthCode, // birth code
+			birthCode: record.birthCode, 
 			Email: record.Email,
 			phone: record.phone,
 			Department: record.Department,
 			job: record.job,
 			where: record.where,
 		}))
-		setEmploe(result)
 		console.log(result)
 	}
 

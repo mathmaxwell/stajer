@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getCardsData } from './getCards'
 
+
 const CardsComponent = () => {
 	const [cards, setCards] = useState<any[]>([])
 
