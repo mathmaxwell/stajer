@@ -5,6 +5,8 @@ import type { IEmployees } from '../types/types'
 import { useEffect, useState } from 'react'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
+import CardsComponent from '../elements/monitoringCards'
+import MyChart from '../elements/myChart'
 
 const Monitoring = () => {
 	const { lang } = useLang()
@@ -20,9 +22,7 @@ const Monitoring = () => {
 	const navigate = useNavigate()
 	return (
 		<div className='flex flex-col w-full h-full gap-5 bg-gray-200'>
-			<ul className='h-1/5 rounded-2xl flex items-center justify-between gap-5 '>
-				<li>card</li>
-			</ul>
+			<CardsComponent />
 			<div
 				style={{
 					background: 'rgba(255, 255, 255, 1)',
@@ -41,44 +41,40 @@ const Monitoring = () => {
 						<p style={{ fontWeight: 400, fontSize: 16 }}>
 							{lang === 'uz'
 								? langUz.latenessInLastDays_part1
-								: langRu.latenessInLastDays_part1}{' '}
-							<strong>nomer qo'yilsin</strong>
+								: langRu.latenessInLastDays_part1}
+							<br /> nomer qo'yilsin{'   '}
 							{lang === 'uz'
 								? langUz.latenessInLastDays_part2
 								: langRu.latenessInLastDays_part2}
 						</p>
 					</div>
 				</div>
-
-				<ul className='h-full'>
-					<li>пн:sonlar</li>
-					<li>вт:sonlar</li>
-					<li>ср:sonlar</li>
-					<li>чт:sonlar</li>
-					<li>пт:sonlar</li>
-					<li>сб:sonlar</li>
-					<li>вс:sonlar</li>
-				</ul>
-
+				<div className='w-100 h-50'>
+					<MyChart informationArray={[1, 2, 3, 4, 5, 6, 9]} />
+				</div>
 				<div className='h-full flex flex-col gap-3'>
-					<div className='bg-white shadow rounded-2xl py-3 px-4'>
+					<div className='bg-white shadow rounded-2xl py-3 px-4 w-72'>
 						<p style={{ fontWeight: 500, fontSize: 18 }}>
 							{lang === 'uz' ? langUz.lostHoursPerDay : langRu.lostHoursPerDay}
 						</p>
 						<p style={{ fontSize: 36, fontWeight: 600 }}>
-							atDay son
-							<span style={{ fontSize: 20, fontWeight: 400 }}>час</span>
+							12
+							<span style={{ fontSize: 20, fontWeight: 400 }}>
+								{lang === 'uz' ? 'soat' : 'час'}
+							</span>
 						</p>
 					</div>
-					<div className='bg-white shadow rounded-2xl py-3 px-4'>
+					<div className='bg-white shadow rounded-2xl py-3 px-4 w-72'>
 						<p style={{ fontWeight: 500, fontSize: 18 }}>
 							{lang === 'uz'
 								? langUz.lostHoursPerWeek
 								: langRu.lostHoursPerWeek}
 						</p>
 						<p style={{ fontSize: 36, fontWeight: 600 }}>
-							hama vaqt
-							<span style={{ fontSize: 20, fontWeight: 400 }}>час</span>
+							48
+							<span style={{ fontSize: 20, fontWeight: 400 }}>
+								{lang === 'uz' ? 'soat' : 'час'}
+							</span>
 						</p>
 					</div>
 				</div>
