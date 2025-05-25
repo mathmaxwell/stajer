@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
 import CardsComponent from '../elements/monitoringCards'
-import MyChart from '../elements/myChart'
+import MyChart from '../elements/MyChart'
 
 const Monitoring = () => {
 	const { lang } = useLang()

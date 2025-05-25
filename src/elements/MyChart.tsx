@@ -1,4 +1,5 @@
 import { Bar } from 'react-chartjs-2'
+import { Doughnut } from 'react-chartjs-2'
 import {
 	Chart as ChartJS,
 	CategoryScale,
@@ -7,7 +8,6 @@ import {
 	Title,
 	Tooltip,
 } from 'chart.js'
-import { ClassNames } from '@emotion/react'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
 interface IInformationArray {
 	informationArray: number[]

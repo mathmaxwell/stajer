@@ -34,37 +34,37 @@ export async function getCardsData() {
 
 	const cards = [
 		{
-			about: 'Активных сотрудников',
+			about: 'activeEmployees',
 			image: green,
 			number: atWorkNumber,
 			link: './base/active',
 		},
 		{
-			about: 'В отпуске',
+			about: 'onVacation',
 			image: yellow,
 			number: onVacationNumber,
 			link: './base/vacation',
 		},
 		{
-			about: 'На больничном',
+			about: 'onSickLeave',
 			image: blue,
 			number: onSickLeaveNumber,
 			link: './base/sick',
 		},
 		{
-			about: 'В командировке',
+			about: 'onBusinessTrip',
 			image: red,
 			number: onBusinessTripNumber,
 			link: './base/trip',
 		},
 		{
-			about: 'Неявка',
+			about: 'absence',
 			image: grey,
 			number: employeesArray.length - atWorkNumber,
 			link: './base/not-at-work',
 		},
 		{
-			about: 'Всего сотрудников',
+			about: 'totalEmployees',
 			image: add,
 			number: employeesArray.length,
 			link: 'base/all',

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import { getCardsData } from './getCards'
+import useLang from '../lang/lang'
+import { langRu, langUz } from '../lang/language'
+
 interface ICards {
 	about: string
 	image: string
@@ -7,6 +10,7 @@ interface ICards {
 	link: string
 }
 const CardsComponent = () => {
+	const { lang } = useLang()
 	const [cards, setCards] = useState<ICards[]>([])
 
 	useEffect(() => {
@@ -26,7 +30,7 @@ const CardsComponent = () => {
 						className='flex flex-col justify-between  bg-white p-3 rounded-2xl'
 					>
 						<p className='text-start' style={{ fontWeight: 500, fontSize: 18 }}>
-							{card.about}
+							{lang === 'uz' ? langUz[card.about] : langRu[card.about]}
 						</p>
 						<div className='flex items-center justify-between'>
 							<p style={{ fontWeight: 600, fontSize: 36 }}>{card.number}</p>
