@@ -1,5 +1,7 @@
 import { Bar } from 'react-chartjs-2'
-import { Doughnut } from 'react-chartjs-2'
+import ChartDataLabels from 'chartjs-plugin-datalabels'
+ChartJS.register(ChartDataLabels)
+import type { ChartOptions } from 'chart.js'
 import {
 	Chart as ChartJS,
 	CategoryScale,
@@ -8,6 +10,7 @@ import {
 	Title,
 	Tooltip,
 } from 'chart.js'
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
 interface IInformationArray {
 	informationArray: number[]
@@ -18,7 +21,6 @@ const MyChart = ({ informationArray }: IInformationArray) => {
 		datasets: [
 			{
 				label: 'Значение',
-
 				data: informationArray,
 				backgroundColor: '#4CAF50',
 				borderColor: '#388E3C',
@@ -26,15 +28,36 @@ const MyChart = ({ informationArray }: IInformationArray) => {
 		],
 	}
 
-	const options = {
+	const options: ChartOptions<'bar'> = {
+		layout: {
+			padding: {
+				top: 20,
+			},
+		},
 		scales: {
 			y: {
-				beginAtZero: true,
+				display: false,
+				grid: {
+					display: false,
+				},
+			},
+			x: {
+				grid: {
+					display: false,
+				},
 			},
 		},
 		plugins: {
 			legend: {
 				display: false,
+			},
+			datalabels: {
+				anchor: 'end',
+				align: 'end',
+				color: '#000',
+				font: {
+					weight: 'bold',
+				},
 			},
 		},
 	}

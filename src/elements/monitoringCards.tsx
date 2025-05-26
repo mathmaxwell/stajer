@@ -27,6 +27,7 @@ const CardsComponent = () => {
 				card.about ? (
 					<div
 						key={i}
+						style={{ height: '140px' }}
 						className='flex flex-col justify-between  bg-white p-3 rounded-2xl'
 					>
 						<p className='text-start' style={{ fontWeight: 500, fontSize: 18 }}>

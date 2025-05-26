@@ -48,6 +48,8 @@ export const langRu: { [key: string]: string } = {
 	onBusinessTrip: 'В командировке',
 	absence: 'Неявка',
 	totalEmployees: 'Всего сотрудников',
+	week: 'неделя',
+	month: 'месяц',
 }
 export const langUz: { [key: string]: string } = {
 	image: 'Rasm',
@@ -99,4 +101,6 @@ export const langUz: { [key: string]: string } = {
 	onBusinessTrip: 'Ish safarida',
 	absence: 'Kelmaganlar',
 	totalEmployees: 'Jami xodimlar',
+	week: 'hafta',
+	month: 'oy',
 }
