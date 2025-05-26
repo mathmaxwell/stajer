@@ -8,32 +8,34 @@ import employees from '../employees/employees'
 import type { IEmployees } from '../types/types'
 const CheckEmotion = () => {
 	const [array, setArray] = useState<IEmployees[]>([])
+	const [emotions, setEmotions] = useState<Record<string, number>>({})
 	useEffect(() => {
 		const fetch = async () => {
-			const data = (await employees()) || []
+			const data = (await employees) || []
 			setArray(data)
+			const moodStats: Record<string, number> = {}
+			data.forEach((user: IEmployees) => {
+				if (user.mood) {
+					moodStats[user.mood] = (moodStats[user.mood] || 0) + 1
+				}
+			})
+			setEmotions(moodStats)
 		}
+
 		fetch()
 	}, [])
 	const { setPage } = useStore()
 	const navigate = useNavigate()
 	const { lang } = useLang()
 	return (
-		<div className='h-2/5 rounded-2xl w-full flex justify-between items-center gap-5'>
+		<div className=' rounded-2xl w-full  flex justify-between items-center gap-5'>
 			<div className='bg-white w-full h-full rounded-2xl shadow py-3 px-5'>
 				<p style={{ fontWeight: 500, fontSize: 18 }}>
 					{lang === 'uz' ? langUz.employeesMood : langRu.employeesMood}
 				</p>
 				<div className='flex items-end justify-between gap-2 w-full '>
 					<div>
-						<MyPieChart
-							dataObject={{
-								'1': 18,
-								'2': 30,
-								'3': 10,
-								'4': 15,
-							}}
-						/>
+						<MyPieChart dataObject={emotions} />
 					</div>
 					<button
 						className='flex items-center justify-center'

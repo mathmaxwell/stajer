@@ -10,7 +10,7 @@ const CheckLate = () => {
 				background: 'rgba(255, 255, 255, 1)',
 				boxShadow: 'rgba(149, 157, 165, 0.2)',
 			}}
-			className='h-2/5 rounded-2xl px-5 py-3 shadow flex flex-col justify-between '
+			className='h-full rounded-2xl px-5 py-3 shadow flex flex-col justify-between '
 		>
 			<div className='flex justify-between items-center'>
 				<div className='w-full'>

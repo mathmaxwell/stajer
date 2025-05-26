@@ -50,6 +50,7 @@ export const langRu: { [key: string]: string } = {
 	totalEmployees: 'Всего сотрудников',
 	week: 'неделя',
 	month: 'месяц',
+	addEmployees: 'Добавить сотрудников',
 }
 export const langUz: { [key: string]: string } = {
 	image: 'Rasm',
@@ -103,4 +104,5 @@ export const langUz: { [key: string]: string } = {
 	totalEmployees: 'Jami xodimlar',
 	week: 'hafta',
 	month: 'oy',
+	addEmployees: 'Xodim qoʻshish',
 }

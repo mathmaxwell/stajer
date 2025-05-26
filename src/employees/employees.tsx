@@ -1,8 +1,7 @@
 import type { RecordModel } from 'pocketbase'
 import pb from '../lib/pocketbase'
 import type { IEmployees } from '../types/types'
-
-export default async function employees() {
+async function employees() {
 	try {
 		const employees: RecordModel[] = await pb
 			.collection('employees')
@@ -31,10 +30,10 @@ export default async function employees() {
 			mood: record.mood,
 			where: record.where,
 		}))
+
 		return result
 	} catch (error) {
 		console.log(error)
 	}
 }
-
-
+export default employees() || []

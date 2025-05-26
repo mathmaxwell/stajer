@@ -1,4 +1,3 @@
-import type { IEmployees } from '../types/types'
 import green from '../images/green.png'
 import yellow from '../images/yellow.png'
 import blue from '../images/blue.png'
@@ -8,14 +7,12 @@ import add from '../images/all.png'
 import employees from '../employees/employees'
 
 export async function getCardsData() {
-	const employeesArray: IEmployees[] = (await employees()) || []
-
+	const result = employees
 	let atWorkNumber = 0
 	let onBusinessTripNumber = 0
 	let onSickLeaveNumber = 0
 	let onVacationNumber = 0
-
-	for (const human of employeesArray) {
+	for (const human of (await result) || []) {
 		switch (human.where) {
 			case 'atWork':
 				atWorkNumber++
@@ -60,13 +57,13 @@ export async function getCardsData() {
 		{
 			about: 'absence',
 			image: grey,
-			number: employeesArray.length - atWorkNumber,
+			number: ((await result) || []).length - atWorkNumber,
 			link: './base/not-at-work',
 		},
 		{
 			about: 'totalEmployees',
 			image: add,
-			number: employeesArray.length,
+			number: ((await result) || []).length,
 			link: 'base/all',
 		},
 	]
