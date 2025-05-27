@@ -1,85 +1,122 @@
 import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import IconButton from '@mui/material/IconButton'
+import { Settings } from '@mui/icons-material'
+import {
+	Button,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+	FormControl,
+	FormGroup,
+	FormControlLabel,
+	Checkbox,
+} from '@mui/material'
+
 import employees from '../employees/employees'
 import baseStory from '../employees/baseStory'
-import { useNavigate } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
-import type { IEmployees } from '../types/types'
 import { langRu, langUz } from '../lang/language'
 import useLang from '../lang/lang'
+import type { IEmployees } from '../types/types'
+
 const Base = () => {
+	const [settings, setSettings] = useState(false)
 	const [search, setSearch] = useState('')
-	const { baseList } = baseStory()
 	const { id } = useParams()
-	useEffect(() => {
-		id === 'active'
-			? baseStory.setState({
-					baseList: [
-						'image',
-						'fullName',
-						'job',
-						'Department',
-						'phone',
-						'Email',
-					],
-			  })
-			: id === 'vacation'
-			? baseStory.setState({
-					baseList: ['image', 'fullName', 'where', 'Department', 'job'],
-			  })
-			: id === 'all'
-			? baseStory.setState({
-					baseList: [
-						'image',
-						'fullName',
-						'passport',
-						'Department',
-						'job',
-						'birthday',
-					],
-			  })
-			: id === 'all-mood'
-			? baseStory.setState({
-					baseList: ['image', 'fullName', 'mood', 'Email', 'job', 'birthday'],
-			  })
-			: id === 'all-birthday'
-			? baseStory.setState({
-					baseList: ['image', 'fullName', 'birthday', 'Department', 'job'],
-			  })
-			: baseStory.setState({
-					baseList: [
-						'image',
-						'fullName',
-						'passport',
-						'Department',
-						'job',
-						'where',
-					],
-			  })
-	}, [id])
 	const { lang } = useLang()
+	const { baseList } = baseStory()
+	const [selected, setSelected] = useState<string[]>(baseList)
 	const [array, setArray] = useState<IEmployees[]>([])
+	const [page, setPage] = useState(0)
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		const config: Record<string, string[]> = {
+			active: ['image', 'fullName', 'job', 'Department', 'phone', 'Email'],
+			vacation: ['image', 'fullName', 'where', 'Department', 'job'],
+			all: ['image', 'fullName', 'passport', 'Department', 'job', 'birthday'],
+			'all-mood': ['image', 'fullName', 'mood', 'Email', 'job', 'birthday'],
+			'all-birthday': ['image', 'fullName', 'birthday', 'Department', 'job'],
+		}
+
+		baseStory.setState({
+			baseList: config[id as string] || [
+				'image',
+				'fullName',
+				'passport',
+				'Department',
+				'job',
+				'where',
+			],
+		})
+	}, [id])
+
 	useEffect(() => {
 		const fetch = async () => {
 			const data = (await employees) || []
-			const filteredData = data.filter((human: IEmployees) =>
+			const filtered = data.filter(human =>
 				human.fullName.toLowerCase().includes(search.toLowerCase().trim())
 			)
-			setArray(filteredData)
+			setArray(filtered)
 		}
 		fetch()
 	}, [search])
 
-	const [page, setPage] = useState(0)
-	const navigate = useNavigate()
+	const handleToggle = (item: string) => {
+		setSelected(prev =>
+			prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
+		)
+	}
+
 	const numberOfPages = baseList.length
+	const currentLang = lang === 'uz' ? langUz : langRu
+
 	return (
 		<div className='flex flex-col gap-5 h-full bg-gray-200'>
+			{/* Settings Dialog */}
+			<Dialog open={settings} onClose={() => setSettings(false)} fullWidth>
+				<DialogTitle>{currentLang.settings}</DialogTitle>
+				<DialogContent>
+					<FormControl component='fieldset' variant='standard' fullWidth>
+						<FormGroup>
+							{baseList.map((item, index) => (
+								<FormControlLabel
+									key={index}
+									control={
+										<Checkbox
+											checked={selected.includes(item)}
+											onChange={() => handleToggle(item)}
+										/>
+									}
+									label={item}
+								/>
+							))}
+						</FormGroup>
+					</FormControl>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={() => setSettings(false)}>Отмена</Button>
+					<Button
+						onClick={() => {
+							baseStory.setState({ baseList: selected })
+							setSettings(false)
+						}}
+					>
+						Сохранить
+					</Button>
+				</DialogActions>
+			</Dialog>
+
+			{/* Header */}
 			<div className='bg-white w-full rounded-2xl flex items-center justify-between p-5'>
-				<p style={{ fontSize: 18, fontWeight: 500 }}>
-					{lang === 'uz'
-						? langUz.baseEmployees.toUpperCase()
-						: langRu.baseEmployees.toUpperCase()}
-				</p>
+				<IconButton onClick={() => setSettings(true)}>
+					<p className='text-lg font-medium'>
+						{currentLang.baseEmployees.toUpperCase()}
+					</p>
+					<Settings />
+				</IconButton>
+
 				<input
 					type='text'
 					placeholder='Search'
@@ -87,45 +124,43 @@ const Base = () => {
 					onChange={e => setSearch(e.target.value)}
 					value={search}
 				/>
+
 				<button onClick={() => navigate('/add-employees')}>
-					{lang === 'uz' ? langUz.addEmployees : langRu.addEmployees}
+					{currentLang.addEmployees}
 				</button>
 			</div>
+
+			{/* Table */}
 			<div className='grid grid-rows-11 rounded-2xl relative h-full bg-white'>
 				<ul
+					className='grid items-center justify-items-center text-center rounded-tl-2xl rounded-tr-2xl'
 					style={{
 						backgroundColor: 'rgba(235, 249, 251, 1)',
 						fontSize: 16,
 						fontWeight: 400,
 						gridTemplateColumns: `repeat(${numberOfPages}, 1fr)`,
 					}}
-					className={`grid items-center justify-items-center text-center rounded-tl-2xl rounded-tr-2xl`}
 				>
 					{baseList.map((item, index) => (
 						<li
-							className='flex items-center justify-center text-center'
 							key={index}
-							style={{
-								color: 'rgba(100, 109, 126, 1)',
-								fontSize: 17,
-								fontWeight: 600,
-							}}
+							className='flex items-center justify-center text-center text-base font-semibold text-gray-600'
 						>
-							{lang === 'uz' ? langUz[item] : langRu[item]}
+							{currentLang[item]}
 						</li>
 					))}
 				</ul>
 
 				{array.slice(page * 10, page * 10 + 9).map(human => (
 					<ul
-						onClick={() => navigate(`/user-id/${human.id}`)}
-						className={`grid`}
 						key={human.passport}
+						onClick={() => navigate(`/user-id/${human.id}`)}
+						className='grid cursor-pointer'
 						style={{ gridTemplateColumns: `repeat(${numberOfPages}, 1fr)` }}
 					>
-						{baseList.map((item, id) =>
+						{baseList.map((item, idx) =>
 							item === 'image' ? (
-								<div key={id} className='flex items-center justify-center'>
+								<div key={idx} className='flex items-center justify-center'>
 									<img
 										className='w-10 h-10 rounded-full'
 										src={human.imageUrl}
@@ -134,16 +169,14 @@ const Base = () => {
 								</div>
 							) : item === 'where' ? (
 								<li
-									key={id}
+									key={idx}
 									className='flex items-center justify-center text-center'
 								>
-									{lang === 'uz'
-										? langUz[human['where']]
-										: langRu[human['where']]}
+									{currentLang[human['where']]}
 								</li>
 							) : (
 								<p
-									key={id}
+									key={idx}
 									className='flex items-center justify-center text-center'
 								>
 									{human[item]}
@@ -152,51 +185,45 @@ const Base = () => {
 						)}
 					</ul>
 				))}
+
+				{/* Pagination */}
 				<div className='flex items-center justify-center gap-10 absolute bottom-7 left-1/2 right-1/2'>
 					<button
 						className='px-6 py-3 rounded-2xl text-nowrap'
-						style={
-							page
-								? {
-										color: 'rgba(100, 109, 126, 1)',
-										fontSize: 17,
-										fontWeight: 600,
-										border: '1px soldi rgba(6, 186, 209, 1)',
-								  }
-								: {
-										color: 'rgba(191, 195, 202, 1)',
-										fontSize: 17,
-										fontWeight: 600,
-										border: '1px solid rgba(180, 234, 241, 1)',
-								  }
-						}
+						style={{
+							color: page ? 'rgba(100, 109, 126, 1)' : 'rgba(191, 195, 202, 1)',
+							fontSize: 17,
+							fontWeight: 600,
+							border: page
+								? '1px solid rgba(6, 186, 209, 1)'
+								: '1px solid rgba(180, 234, 241, 1)',
+						}}
 						onClick={() => page && setPage(prev => prev - 1)}
 					>
-						{lang === 'uz' ? langUz.prev : langRu.prev}
+						{currentLang.prev}
 					</button>
+
 					{page + 1}
+
 					<button
-						style={
-							page < Math.floor(array.length / 9)
-								? {
-										color: 'rgba(100, 109, 126, 1)',
-										fontSize: 17,
-										fontWeight: 600,
-										border: '1px solid rgba(6, 186, 209, 1)',
-								  }
-								: {
-										color: 'rgba(191, 195, 202, 1)',
-										fontSize: 17,
-										fontWeight: 600,
-										border: '1px solid rgba(180, 234, 241, 1)',
-								  }
-						}
 						className='px-6 py-3 rounded-2xl text-nowrap'
+						style={{
+							color:
+								page < Math.floor(array.length / 9)
+									? 'rgba(100, 109, 126, 1)'
+									: 'rgba(191, 195, 202, 1)',
+							fontSize: 17,
+							fontWeight: 600,
+							border:
+								page < Math.floor(array.length / 9)
+									? '1px solid rgba(6, 186, 209, 1)'
+									: '1px solid rgba(180, 234, 241, 1)',
+						}}
 						onClick={() =>
 							page < Math.floor(array.length / 9) && setPage(prev => prev + 1)
 						}
 					>
-						{lang === 'uz' ? langUz.next : langRu.next}
+						{currentLang.next}
 					</button>
 				</div>
 			</div>

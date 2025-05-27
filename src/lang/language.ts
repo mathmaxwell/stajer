@@ -52,6 +52,7 @@ export const langRu: { [key: string]: string } = {
 	month: 'месяц',
 	addEmployees: 'Добавить сотрудников',
 	fullInfo: 'Полная информация',
+	settings: 'Настройки',
 }
 export const langUz: { [key: string]: string } = {
 	image: 'Rasm',
@@ -107,4 +108,5 @@ export const langUz: { [key: string]: string } = {
 	month: 'oy',
 	addEmployees: 'Xodim qoʻshish',
 	fullInfo: 'Toʻliq maʼlumot',
+	settings: 'Sozlamalar',
 }
