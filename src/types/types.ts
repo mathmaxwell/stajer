@@ -21,4 +21,5 @@ export interface IEmployees {
 	job: string
 	mood: string
 	where: string
+	id: string
 }

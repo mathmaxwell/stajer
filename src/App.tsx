@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom'
-import './App.css'
 import ProtectedRoute from './layouts/ProtectedRoute'
 import SignIn from './components/signIn'
 import RegisterLayOut from './layouts/registerLayOut'
@@ -7,6 +6,7 @@ import Register from './components/register'
 import Monitoring from './components/monitoring'
 import Base from './components/base'
 import AddEmployees from './components/addEmployees'
+import UserId from './components/userId'
 function App() {
 	return (
 		<>
@@ -32,6 +32,14 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<Base />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path='/user-id/:id'
+					element={
+						<ProtectedRoute>
+							<UserId />
 						</ProtectedRoute>
 					}
 				/>

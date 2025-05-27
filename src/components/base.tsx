@@ -118,6 +118,7 @@ const Base = () => {
 
 				{array.slice(page * 10, page * 10 + 9).map(human => (
 					<ul
+						onClick={() => navigate(`/user-id/${human.id}`)}
 						className={`grid`}
 						key={human.passport}
 						style={{ gridTemplateColumns: `repeat(${numberOfPages}, 1fr)` }}

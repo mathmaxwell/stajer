@@ -23,6 +23,7 @@
 		"pocketbase": "^0.26.0",
 		"react": "^19.1.0",
 		"react-chartjs-2": "^5.3.0",
+		"react-declarative": "^2.7.95",
 		"react-dom": "^19.1.0",
 		"react-hook-form": "^7.56.4",
 		"react-router-dom": "^7.6.0",
