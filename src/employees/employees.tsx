@@ -15,7 +15,7 @@ async function employees() {
 			PINFL: record.PINFL,
 			birthday: record.birthday,
 			birthPlace: record.birthPlace,
-			imageUrl: pb.files.getURL(record, record.image),
+			imageUrl: pb.files.getURL(record, record.image), 
 			PassportIssued: record.PassportIssued,
 			IssuedBy: record.IssuedBy,
 			IssueDate: record.IssueDate,

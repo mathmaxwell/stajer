@@ -59,7 +59,14 @@ function App() {
 						</RegisterLayOut>
 					}
 				/>
-				<Route path='/add-employees' element={<AddEmployees />} />
+				<Route
+					path='/add-employees'
+					element={
+						<ProtectedRoute>
+							<AddEmployees />
+						</ProtectedRoute>
+					}
+				/>
 			</Routes>
 		</>
 	)

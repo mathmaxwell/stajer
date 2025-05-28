@@ -12,6 +12,8 @@ import {
 	FormGroup,
 	FormControlLabel,
 	Checkbox,
+	Box,
+	Switch,
 } from '@mui/material'
 
 import employees from '../employees/employees'
@@ -25,31 +27,24 @@ const Base = () => {
 	const [search, setSearch] = useState('')
 	const { id } = useParams()
 	const { lang } = useLang()
-	const { baseList } = baseStory()
-	const [selected, setSelected] = useState<string[]>(baseList)
+	const { baseList, setBaseList, fullList } = baseStory()
+
 	const [array, setArray] = useState<IEmployees[]>([])
 	const [page, setPage] = useState(0)
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		const config: Record<string, string[]> = {
-			active: ['image', 'fullName', 'job', 'Department', 'phone', 'Email'],
-			vacation: ['image', 'fullName', 'where', 'Department', 'job'],
-			all: ['image', 'fullName', 'passport', 'Department', 'job', 'birthday'],
-			'all-mood': ['image', 'fullName', 'mood', 'Email', 'job', 'birthday'],
-			'all-birthday': ['image', 'fullName', 'birthday', 'Department', 'job'],
-		}
-
-		baseStory.setState({
-			baseList: config[id as string] || [
-				'image',
-				'fullName',
-				'passport',
-				'Department',
-				'job',
-				'where',
-			],
-		})
+		setBaseList(
+			id === 'active'
+				? ['image', 'fullName', 'job', 'Department', 'phone', 'Email']
+				: id === 'not-at-work'
+				? ['image', 'fullName', 'passport', 'Department', 'job', 'where']
+				: id === 'all-mood'
+				? ['image', 'fullName', 'mood', 'Email', 'job', 'birthday']
+				: id === 'all-birthday'
+				? ['image', 'fullName', 'birthday', 'Department', 'job']
+				: ['image', 'fullName', 'where', 'Department', 'job']
+		)
 	}, [id])
 
 	useEffect(() => {
@@ -63,48 +58,39 @@ const Base = () => {
 		fetch()
 	}, [search])
 
-	const handleToggle = (item: string) => {
-		setSelected(prev =>
-			prev.includes(item) ? prev.filter(i => i !== item) : [...prev, item]
-		)
-	}
-
 	const numberOfPages = baseList.length
 	const currentLang = lang === 'uz' ? langUz : langRu
 
 	return (
 		<div className='flex flex-col gap-5 h-full bg-gray-200'>
 			{/* Settings Dialog */}
-			<Dialog open={settings} onClose={() => setSettings(false)} fullWidth>
-				<DialogTitle>{currentLang.settings}</DialogTitle>
+			<Dialog fullWidth open={settings} onClose={() => setSettings(false)}>
+				<DialogTitle>nastroyka</DialogTitle>
 				<DialogContent>
-					<FormControl component='fieldset' variant='standard' fullWidth>
-						<FormGroup>
-							{baseList.map((item, index) => (
-								<FormControlLabel
-									key={index}
-									control={
-										<Checkbox
-											checked={selected.includes(item)}
-											onChange={() => handleToggle(item)}
-										/>
-									}
-									label={item}
-								/>
-							))}
-						</FormGroup>
-					</FormControl>
+					<Box noValidate component='form' className='grid grid-cols-2'>
+						{fullList.map((item, index) => (
+							<FormControlLabel
+								key={index}
+								sx={{ mt: 1 }}
+								control={
+									<Switch
+										checked={baseList.includes(item)}
+										onChange={() => {
+											const newList = baseList.includes(item)
+												? baseList.filter(i => i !== item)
+												: [...baseList, item]
+
+											setBaseList(newList)
+										}}
+									/>
+								}
+								label={item}
+							/>
+						))}
+					</Box>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={() => setSettings(false)}>Отмена</Button>
-					<Button
-						onClick={() => {
-							baseStory.setState({ baseList: selected })
-							setSettings(false)
-						}}
-					>
-						Сохранить
-					</Button>
+					<Button onClick={() => setSettings(false)}>zakrit</Button>
 				</DialogActions>
 			</Dialog>
 

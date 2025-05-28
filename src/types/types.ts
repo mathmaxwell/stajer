@@ -2,7 +2,7 @@ export interface IEmployees {
 	image: string
 	imageUrl?: string
 	fullName: string
-	gender: string
+	gender: 'Мужчина' | 'Женщина'
 	passport: string
 	PINFL: string
 	birthday: string
