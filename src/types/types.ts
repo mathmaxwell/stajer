@@ -1,8 +1,8 @@
 export interface IEmployees {
-	image: string
+	image: string | null
 	imageUrl?: string
 	fullName: string
-	gender: 'Мужчина' | 'Женщина'
+	gender: 'Мужчина' | 'Женщина' 
 	passport: string
 	PINFL: string
 	birthday: string

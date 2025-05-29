@@ -8,10 +8,7 @@ import {
 	DialogTitle,
 	DialogContent,
 	DialogActions,
-	FormControl,
-	FormGroup,
 	FormControlLabel,
-	Checkbox,
 	Box,
 	Switch,
 } from '@mui/material'
@@ -146,7 +143,10 @@ const Base = () => {
 					>
 						{baseList.map((item, idx) =>
 							item === 'image' ? (
-								<div key={idx} className='flex items-center justify-center'>
+								<div
+									key={1000 - idx}
+									className='flex items-center justify-center'
+								>
 									<img
 										className='w-10 h-10 rounded-full'
 										src={human.imageUrl}

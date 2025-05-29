@@ -3,7 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom'
 import pb from '../lib/pocketbase'
 import type { IEmployees } from '../types/types'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
-import { Box, TextField, MenuItem, Button } from '@mui/material'
+import {
+	Box,
+	TextField,
+	MenuItem,
+	Button,
+	FormControl,
+	InputLabel,
+	Select,
+} from '@mui/material'
 import type { SelectChangeEvent } from '@mui/material'
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -40,6 +48,7 @@ const UserPage = () => {
 		if (array) {
 			try {
 				const newRecord = await pb.collection('employees').create(array)
+				console.log(newRecord)
 				alert('Создано')
 				navigate('/base')
 			} catch (error) {
@@ -68,20 +77,50 @@ const UserPage = () => {
 				phone: '',
 				Department: '',
 				job: '',
-				image: '',
+				image: null,
 			})
 		}
 	}, [id])
-
+	const [download, setDownload] = useState(false)
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
 			<Box className='flex flex-col gap-5 p-4'>
 				<Box className='flex gap-4'>
-					{img ? (
-						<img src={img} className='w-[200px] h-[250px] ' />
+					{download ? (
+						<label className='w-[200px] h-[250px] flex items-center justify-center border-2 border-dashed rounded-xl cursor-pointer hover:bg-gray-100'>
+							<span className='text-gray-500'>Загрузить фото</span>
+							<input
+								type='file'
+								accept='image/*'
+								className='hidden'
+								onChange={e => {
+									const file = e.target.files?.[0]
+									if (file) {
+										const reader = new FileReader()
+										reader.onloadend = () => {
+											setImg(reader.result as string)
+											setArray(prev => (prev ? { ...prev, image: file } : null))
+										}
+										reader.readAsDataURL(file)
+									}
+								}}
+							/>
+						</label>
+					) : img ? (
+						<img
+							src={img}
+							className='w-[200px] h-[250px] rounded-xl cursor-pointer'
+							onClick={() => setDownload(true)}
+						/>
 					) : (
-						<PersonAddAltIcon className='w-[200px] h-[250px] text-gray-400' />
+						<div
+							onClick={() => setDownload(true)}
+							className='w-[200px] h-[250px] flex items-center justify-center bg-gray-100 text-gray-400 rounded-xl cursor-pointer hover:bg-gray-200'
+						>
+							<PersonAddAltIcon className='text-6xl' />
+						</div>
 					)}
+
 					<div className='flex flex-col w-full gap-4'>
 						<TextField
 							label='ФИО'
@@ -94,25 +133,27 @@ const UserPage = () => {
 							}
 						/>
 						<div className='grid grid-cols-2 gap-4'>
-							<TextField
-								label='Пол'
-								value={array?.gender || ''}
-								select
-								fullWidth
-								onChange={(e: SelectChangeEvent<string>) =>
-									setArray(prev =>
-										prev
-											? {
-													...prev,
-													gender: e.target.value as 'Мужчина' | 'Женщина',
-											  }
-											: null
-									)
-								}
-							>
-								<MenuItem value='Мужчина'>Мужчина</MenuItem>
-								<MenuItem value='Женщина'>Женщина</MenuItem>
-							</TextField>
+							<FormControl fullWidth>
+								<InputLabel id='gender-label'>Пол</InputLabel>
+								<Select
+									labelId='gender-label'
+									value={array?.gender || ''}
+									label='Пол'
+									onChange={(e: SelectChangeEvent<string>) =>
+										setArray(prev =>
+											prev
+												? {
+														...prev,
+														gender: e.target.value as 'Мужчина' | 'Женщина',
+												  }
+												: null
+										)
+									}
+								>
+									<MenuItem value='Мужчина'>Мужчина</MenuItem>
+									<MenuItem value='Женщина'>Женщина</MenuItem>
+								</Select>
+							</FormControl>
 							<TextField
 								label='Серия и номер паспорта'
 								value={array?.passport || ''}

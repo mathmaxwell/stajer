@@ -7,7 +7,7 @@ async function employees() {
 			.collection('employees')
 			.getFullList()
 
-		const result: IEmployees[] = employees.map(record => ({
+		const result: IEmployees[] = employees.map((record ) => ({
 			image: record.image,
 			fullName: record.fullName,
 			gender: record.gender,
@@ -15,7 +15,7 @@ async function employees() {
 			PINFL: record.PINFL,
 			birthday: record.birthday,
 			birthPlace: record.birthPlace,
-			imageUrl: pb.files.getURL(record, record.image), 
+			imageUrl: pb.files.getURL(record, record.image),
 			PassportIssued: record.PassportIssued,
 			IssuedBy: record.IssuedBy,
 			IssueDate: record.IssueDate,
