@@ -23,7 +23,7 @@ const CheckEmotion = () => {
 		}
 
 		fetch()
-	}, [])
+	}, []) 
 	const { setPage } = useStore()
 	const navigate = useNavigate()
 	const { lang } = useLang()
