@@ -7,6 +7,7 @@ import { langRu, langUz } from '../lang/language'
 import { IconButton, Typography } from '@mui/material'
 import { ExitToApp } from '@mui/icons-material'
 import UserPage from './userPage'
+
 const UserId = () => {
 	const navigate = useNavigate()
 	const { lang } = useLang()

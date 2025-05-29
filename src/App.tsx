@@ -3,10 +3,11 @@ import ProtectedRoute from './layouts/ProtectedRoute'
 import SignIn from './components/signIn'
 import RegisterLayOut from './layouts/registerLayOut'
 import Register from './components/register'
-import Monitoring from './components/monitoring'
-import Base from './components/base'
-import AddEmployees from './components/addEmployees'
-import UserId from './components/userId'
+
+import AddEmployees from './pages/addEmployees'
+import Base from './pages/base'
+import Monitoring from './pages/monitoring'
+import UserId from './pages/userId'
 function App() {
 	return (
 		<>

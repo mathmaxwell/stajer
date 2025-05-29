@@ -9,13 +9,13 @@ const SignIn = () => {
 	}
 	const navigate = useNavigate()
 	const { register, handleSubmit, watch } = useForm<formData>()
-	const userId = pb.authStore.model?.id
 	async function onSubmit(data: formData) {
 		try {
 			const user = await pb
 				.collection('users')
 				.authWithPassword(data.login, data.password)
 			navigate('/')
+			console.log(user)
 		} catch (error) {
 			console.log(error)
 		}
