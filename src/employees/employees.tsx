@@ -7,7 +7,7 @@ async function employees() {
 			.collection('employees')
 			.getFullList()
 
-		const result: IEmployees[] = employees.map((record ) => ({
+		const result: IEmployees[] = employees.map(record => ({
 			image: record.image,
 			fullName: record.fullName,
 			gender: record.gender,
@@ -31,6 +31,8 @@ async function employees() {
 			mood: record.mood,
 			where: record.where,
 			id: record.id,
+			whenlateMap: record.whenlateMap,
+			whenlate: record.whenlate,
 		}))
 		return result
 	} catch (error) {

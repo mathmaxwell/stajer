@@ -1,8 +1,8 @@
 export interface IEmployees {
-	image: string | null
+	image: string | File
 	imageUrl?: string
 	fullName: string
-	gender: 'Мужчина' | 'Женщина' 
+	gender: 'Мужчина' | 'Женщина'
 	passport: string
 	PINFL: string
 	birthday: string
@@ -22,4 +22,6 @@ export interface IEmployees {
 	mood: string
 	where: string
 	id: string
+	whenlate: string
+	whenlateMap:string
 }
