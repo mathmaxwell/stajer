@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import pb from '../lib/pocketbase'
-import { Box, Button, Tabs, Tab } from '@mui/material'
+import { Box, Button, Tabs, Tab, Paper } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
 
 import type { IEmployees } from '../types/types'
+import pb from '../lib/pocketbase'
 import PageOne from '../components/pageOne'
 import PageTwo from '../components/pageTwo'
 import HeaderPage from '../components/headerPage'
@@ -21,25 +21,19 @@ const UserPage = () => {
 	const { id } = useParams<{ id: string }>()
 	const navigate = useNavigate()
 
+	// Убрали конвертацию в YYYY-MM-DD, оставляем DD-MM-YYYY
 	const formatDateFields = (data: IEmployees) => ({
 		...data,
-		birthday: data.birthday
-			? dayjs(data.birthday, 'DD-MM-YYYY').format('YYYY-MM-DD')
-			: '',
-		PassportIssued: data.PassportIssued
-			? dayjs(data.PassportIssued, 'DD-MM-YYYY').format('YYYY-MM-DD')
-			: '',
-		ExpirationDate: data.ExpirationDate
-			? dayjs(data.ExpirationDate, 'DD-MM-YYYY').format('YYYY-MM-DD')
-			: '',
-		IssueDate: data.IssueDate
-			? dayjs(data.IssueDate, 'DD-MM-YYYY').format('YYYY-MM-DD')
-			: '',
+		birthday: data.birthday || '',
+		PassportIssued: data.PassportIssued || '',
+		ExpirationDate: data.ExpirationDate || '',
+		IssueDate: data.IssueDate || '',
 	})
 
 	const getUser = async (id: string) => {
 		try {
 			const info = await pb.collection('employees').getOne(id)
+			console.log('Fetched user:', info)
 			setArray(info as unknown as IEmployees)
 			setImg(pb.files.getURL(info, info.image) || null)
 		} catch (error) {
@@ -49,16 +43,20 @@ const UserPage = () => {
 	}
 
 	const updateUser = async () => {
-		if (!array || !id) return
+		if (!array || !id) {
+			console.log('No array or id')
+			return
+		}
 		let updatedArray = { ...array }
 		if (tempDate && tempMinutes) {
 			const formattedDate = tempDate.format('DD-MM-YYYY')
 			const whenlate = {
-				...JSON.parse(array.whenlate || '{}'),
+				...(array.whenlate ? JSON.parse(array.whenlate) : {}),
 				[formattedDate]: Number(tempMinutes),
 			}
 			updatedArray = { ...array, whenlate: JSON.stringify(whenlate) }
 		}
+		console.log('Updating with:', formatDateFields(updatedArray))
 		try {
 			await pb
 				.collection('employees')
@@ -73,17 +71,25 @@ const UserPage = () => {
 	}
 
 	const createUser = async () => {
-		if (!array) return
+		if (!array) {
+			console.log('No array')
+			return
+		}
 		try {
 			const formData = new FormData()
 			const formattedArray = {
 				...formatDateFields(array),
 				whenlate: array.whenlate || '{}',
 			}
+			console.log('Creating with:', formattedArray)
 			Object.entries(formattedArray).forEach(([key, value]) => {
-				if (key !== 'image' && value !== undefined) formData.append(key, value)
+				if (key !== 'image' && value !== undefined) {
+					formData.append(key, value as string)
+				}
 			})
-			if (array.image instanceof File) formData.append('image', array.image)
+			if (array.image instanceof File) {
+				formData.append('image', array.image)
+			}
 			await pb.collection('employees').create(formData)
 			alert('Создано')
 			navigate('/base')
@@ -129,7 +135,16 @@ const UserPage = () => {
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
-			<Box className='flex flex-col gap-5 p-4'>
+			<Paper
+				elevation={3}
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					gap: 3,
+					p: 3,
+					borderRadius: 4,
+				}}
+			>
 				<HeaderPage
 					download={download}
 					setImg={setImg}
@@ -138,15 +153,17 @@ const UserPage = () => {
 					setDownload={setDownload}
 					array={array}
 				/>
+
 				<Box>
 					<Tabs
 						value={value}
 						onChange={(e, newValue) => setValue(newValue)}
-						aria-label='basic tabs'
+						aria-label='tabs'
 					>
 						<Tab label='Раздел 1' />
 						<Tab label='Раздел 2' />
 					</Tabs>
+
 					{value === 0 && <PageOne array={array} setArray={setArray} />}
 					{value === 1 && (
 						<PageTwo
@@ -160,16 +177,13 @@ const UserPage = () => {
 						/>
 					)}
 				</Box>
-				<Box className='flex gap-4'>
-					<Button
-						variant='contained'
-						onClick={id ? updateUser : createUser}
-						className='mt-4'
-					>
+
+				<Box sx={{ display: 'flex', gap: 2 }}>
+					<Button variant='contained' onClick={id ? updateUser : createUser}>
 						{id ? 'Сохранить' : 'Добавить'}
 					</Button>
 				</Box>
-			</Box>
+			</Paper>
 		</LocalizationProvider>
 	)
 }

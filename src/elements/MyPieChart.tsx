@@ -1,8 +1,10 @@
 import type { ChartOptions } from 'chart.js'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
+import { Box, List, ListItem, Typography } from '@mui/material'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
+
 interface IPieChartProps {
 	dataObject: Record<string, number>
 }
@@ -41,20 +43,33 @@ const MyPieChart = ({ dataObject }: IPieChartProps) => {
 	}
 
 	return (
-		<div style={{ position: 'relative', width: 350, height: 300 }}>
+		<Box sx={{ position: 'relative', width: 350, height: 300 }}>
 			<Doughnut data={chartData} options={options} />
-			<ul
-				className='flex flex-col items-center justify-center'
-				style={{
+			<List
+				sx={{
 					position: 'absolute',
 					top: '50%',
 					left: '50%',
 					transform: 'translate(-100%, -50%)',
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+					justifyContent: 'center',
+					p: 0,
 				}}
 			>
 				{Object.entries(dataObject).map(([key, value], id) => (
-					<li className='flex items-center justify-center gap-2' key={id}>
-						<p>
+					<ListItem
+						key={id}
+						sx={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							gap: 1,
+							py: 0.5,
+						}}
+					>
+						<Typography>
 							{key === '1'
 								? '😭'
 								: key === '2'
@@ -62,12 +77,12 @@ const MyPieChart = ({ dataObject }: IPieChartProps) => {
 								: key === '3'
 								? '😢'
 								: '😂'}
-						</p>
-						<p>{value}</p>
-					</li>
+						</Typography>
+						<Typography>{value}</Typography>
+					</ListItem>
 				))}
-			</ul>
-		</div>
+			</List>
+		</Box>
 	)
 }
 export default MyPieChart

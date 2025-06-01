@@ -1,14 +1,59 @@
+import { Box, Paper } from '@mui/material'
+
 import CheckEmotion from '../components/checkEmotion'
 import CheckLate from '../components/checkLate'
 import CardsComponent from '../elements/monitoringCards'
 
 const Monitoring = () => {
 	return (
-		<div className='flex flex-col justify-between w-full h-full gap-5 bg-gray-200'>
-			<CardsComponent />
-			<CheckLate />
-			<CheckEmotion />
-		</div>
+		<Box
+			sx={{
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'space-between',
+				width: '100%',
+				gap: 2,
+				height: '100%',
+				bgcolor: '#eee',
+				p: 0,
+			}}
+		>
+			<Paper
+				elevation={3}
+				sx={{
+					borderRadius: '16px',
+					bgcolor: '#eee',
+					border: 'none',
+					outline: 'none',
+				}}
+			>
+				<CardsComponent />
+			</Paper>
+
+			<Paper
+				elevation={3}
+				sx={{
+					borderRadius: '16px',
+					bgcolor: '#eee',
+					border: 'none',
+					outline: 'none',
+				}}
+			>
+				<CheckLate />
+			</Paper>
+
+			<Paper
+				elevation={3}
+				sx={{
+					borderRadius: '16px',
+					bgcolor: '#eee',
+					border: 'none',
+					outline: 'none',
+				}}
+			>
+				<CheckEmotion />
+			</Paper>
+		</Box>
 	)
 }
 

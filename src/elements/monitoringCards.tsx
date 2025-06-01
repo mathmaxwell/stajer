@@ -3,13 +3,16 @@ import { getCardsData } from './getCards'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
 import { useNavigate } from 'react-router-dom'
+import { Box, Card, Typography } from '@mui/material'
+import useStore from '../elements/setHomePage'
+
 interface ICards {
 	about: string
 	image: string
 	number: number
 	link: string
 }
-import useStore from '../elements/setHomePage'
+
 const CardsComponent = () => {
 	const { setPage } = useStore()
 	const navigate = useNavigate()
@@ -25,30 +28,68 @@ const CardsComponent = () => {
 	}, [])
 
 	return (
-		<div className='grid grid-cols-6 gap-4'>
+		<Box
+			sx={{
+				bgcolor: '#eee',
+				display: 'grid',
+				gridTemplateColumns: 'repeat(6, 1fr)',
+				width: '100%',
+				borderRadius: '16px',
+				border: 'none',
+				outline: 'none',
+				gap: 2,
+			}}
+		>
 			{cards.map((card, i) =>
 				card.about ? (
-					<div
+					<Card
+						key={i}
 						onClick={() => {
 							navigate(card.link)
 							setPage('base')
 						}}
-						key={i}
-						style={{ height: '140px' }}
-						className='flex flex-col justify-between  bg-white p-3 rounded-2xl'
+						sx={{
+							border: 'none',
+							outline: 'none',
+							height: 140,
+							bgcolor: '#fff',
+							cursor: 'pointer',
+							'&:hover': { boxShadow: 6 },
+							borderRadius: '16px',
+							display: 'flex',
+							flexDirection: 'column',
+							p: 2,
+							justifyContent: 'space-between',
+						}}
 					>
-						<p className='text-start' style={{ fontWeight: 500, fontSize: 18 }}>
+						<Typography
+							sx={{
+								fontWeight: 500,
+								fontSize: 18,
+							}}
+						>
 							{lang === 'uz' ? langUz[card.about] : langRu[card.about]}
-						</p>
-						<div className='flex items-center justify-between'>
-							<p style={{ fontWeight: 600, fontSize: 36 }}>{card.number}</p>
-							<img src={card.image} alt='' />
-						</div>
-					</div>
+						</Typography>
+						<Box
+							sx={{
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'space-between',
+							}}
+						>
+							<Typography sx={{ fontWeight: 600, fontSize: 36 }}>
+								{card.number}
+							</Typography>
+							<Box
+								component='img'
+								src={card.image}
+								sx={{ width: 40, height: 40 }}
+							/>
+						</Box>
+					</Card>
 				) : null
 			)}
-		</div>
+		</Box>
 	)
 }
-
 export default CardsComponent

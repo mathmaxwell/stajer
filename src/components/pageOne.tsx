@@ -1,8 +1,7 @@
-import { TextField } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
-
 import type { IEmployees } from '../types/types'
 
 const PageOne = ({
@@ -13,7 +12,11 @@ const PageOne = ({
 	setArray: React.Dispatch<React.SetStateAction<IEmployees | null>>
 }) => {
 	const updateArray = (field: keyof IEmployees, value: string) =>
-		setArray(prev => (prev ? { ...prev, [field]: value } : null))
+		setArray(prev => {
+			const newArray = prev ? { ...prev, [field]: value } : null
+			console.log('PageOne Updated:', field, value, newArray)
+			return newArray
+		})
 
 	const renderDatePicker = (
 		label: string,
@@ -21,20 +24,25 @@ const PageOne = ({
 	) => (
 		<DatePicker
 			label={label}
-			value={
-				array?.[field] && dayjs(array[field], 'DD-MM-YYYY').isValid()
-					? dayjs(array[field], 'DD-MM-YYYY')
-					: null
-			}
-			onChange={(newValue: Dayjs | null) =>
-				updateArray(field, newValue ? newValue.format('DD-MM-YYYY') : '')
-			}
+			value={array?.[field] ? dayjs(array[field], 'DD-MM-YYYY', true) : null}
+			onChange={(newValue: Dayjs | null) => {
+				const formatted = newValue ? newValue.format('DD-MM-YYYY') : ''
+				console.log(`Selected ${field}:`, formatted)
+				updateArray(field, formatted)
+			}}
 			format='DD-MM-YYYY'
 		/>
 	)
 
 	return (
-		<div className='grid grid-cols-2 gap-5 my-5'>
+		<Box
+			sx={{
+				display: 'grid',
+				gridTemplateColumns: '1fr 1fr',
+				gap: 5,
+				my: 5,
+			}}
+		>
 			{renderDatePicker('Паспорт выдан', 'PassportIssued')}
 			<TextField
 				label='Кем выдан'
@@ -43,7 +51,7 @@ const PageOne = ({
 				onChange={e => updateArray('IssuedBy', e.target.value)}
 			/>
 			{renderDatePicker('Дата истечения срока паспорта', 'ExpirationDate')}
-			{renderDatePicker('Дата выдачи паспорта', 'IssueDate')}
+			{renderDatePicker('Дата выдачи', 'IssueDate')}
 			<TextField
 				label='Код страны гражданства'
 				value={array?.NationalityCode || ''}
@@ -80,7 +88,7 @@ const PageOne = ({
 				fullWidth
 				onChange={e => updateArray('Email', e.target.value)}
 			/>
-		</div>
+		</Box>
 	)
 }
 

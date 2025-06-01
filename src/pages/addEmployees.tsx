@@ -1,7 +1,6 @@
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import { useNavigate } from 'react-router-dom'
+import { Box, Typography, IconButton } from '@mui/material'
 import { ExitToAppTwoTone } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
 import UserPage from './userPage'
@@ -9,23 +8,41 @@ import UserPage from './userPage'
 const AddEmployees = () => {
 	const { lang } = useLang()
 	const navigate = useNavigate()
+
 	return (
-		<div className='rounded-2xl w-full h-full py-3 px-5'>
-			<div className='flex items-center justify-between'>
+		<Box
+			sx={{
+				borderRadius: '16px',
+				width: '100%',
+				height: '100%',
+				p: { xs: 2, md: 3 }, // py-3 px-5
+				bgcolor: 'background.paper',
+			}}
+		>
+			<Box
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'space-between',
+					mb: 2,
+				}}
+			>
 				<Typography
 					variant='h4'
-					color='initial'
-					style={{ fontSize: 18, fontWeight: 500 }}
+					sx={{
+						fontSize: 18,
+						fontWeight: 500,
+						color: 'text.primary',
+					}}
 				>
 					{lang === 'uz' ? langUz.addEmployees : langRu.addEmployees}
 				</Typography>
-				<IconButton aria-label='' onClick={() => navigate('/base')}>
+				<IconButton aria-label='exit' onClick={() => navigate('/base')}>
 					<ExitToAppTwoTone />
 				</IconButton>
-			</div>
+			</Box>
 			<UserPage />
-		</div>
+		</Box>
 	)
 }
-
 export default AddEmployees

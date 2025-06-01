@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import type { FC, ReactNode } from 'react'
+import { Box, Typography } from '@mui/material'
 import face from '../images/face.svg'
-import Typography from '@mui/material/Typography'
 
 type Props = {
 	children: ReactNode
@@ -8,29 +8,63 @@ type Props = {
 
 const RegisterLayOut = ({ children }: Props) => {
 	return (
-		<div className='relative flex items-end justify-start'>
-			<img src={face} alt='face' className='h-screen' />
+		<Box
+			sx={{
+				position: 'relative',
+				display: 'flex',
+				alignItems: 'flex-end',
+				justifyContent: 'flex-start',
+				height: '100vh',
+				width: '100%',
+			}}
+		>
+			<Box
+				component='img'
+				src={face}
+				alt='face'
+				sx={{ height: '100vh', width: 'auto' }}
+			/>
 			<Typography
 				variant='h1'
-				color='primary'
 				sx={{
 					fontSize: 80,
 					color: 'rgba(6, 186, 209, 1)',
+					lineHeight: 1.2,
 				}}
 			>
-				TAD <br /> INDUSTRIES
+				TAD
+				<br />
+				INDUSTRIES
 			</Typography>
-			<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-5 border-[rgba(147,192,198,1)] rounded-2xl w-lg h-auto px-12 py-8 flex flex-col gap-7'>
+			<Box
+				sx={{
+					position: 'absolute',
+					top: '50%',
+					left: '50%',
+					transform: 'translate(-50%, -50%)',
+					border: '5px solid rgba(147, 192, 198, 1)',
+					borderRadius: '16px',
+					width: { xs: '90%', sm: 500, md: 640 }, // w-lg ~640px, responsive
+					p: { xs: 6, md: 8 }, // px-12 py-8
+					display: 'flex',
+					flexDirection: 'column',
+					gap: 3, // gap-7 ~24px
+					bgcolor: 'background.paper',
+					boxShadow: 3,
+				}}
+			>
 				<Typography
 					variant='h6'
-					sx={{ fontSize: 23 }}
-					color='rgba(6, 186, 209, 1)'
+					sx={{
+						fontSize: 24,
+						color: 'rgba(6, 186, 209, 1)',
+					}}
 				>
 					FaceIDS
 				</Typography>
 				{children}
-			</div>
-		</div>
+			</Box>
+		</Box>
 	)
 }
 

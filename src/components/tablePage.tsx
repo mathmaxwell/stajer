@@ -1,8 +1,18 @@
 import { useNavigate } from 'react-router-dom'
-import baseStory from '../employees/baseStory'
+import { useState } from 'react'
+import {
+	Box,
+	Button,
+	Typography,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+} from '@mui/material'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
-import { useState } from 'react'
+import baseStory from '../employees/baseStory'
 import type { IEmployees } from '../types/types'
 
 const TablePage = ({ array }: { array: IEmployees[] }) => {
@@ -10,107 +20,148 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 	const navigate = useNavigate()
 	const { baseList } = baseStory()
 	const { lang } = useLang()
-	const numberOfPages = baseList.length
+
 	return (
-		<div className='grid grid-rows-11 rounded-2xl relative h-full bg-white'>
-			<ul
-				className='grid items-center justify-items-center text-center rounded-tl-2xl rounded-tr-2xl'
-				style={{
-					backgroundColor: 'rgba(235, 249, 251, 1)',
-					fontSize: 16,
-					fontWeight: 400,
-					gridTemplateColumns: `repeat(${numberOfPages}, 1fr)`,
+		<Box
+			sx={{
+				display: 'grid',
+				gridTemplateRows: 'auto 1fr auto',
+				borderRadius: '16px',
+				height: '100%',
+				bgcolor: '#fff',
+				position: 'relative',
+			}}
+		>
+			<Table sx={{ borderRadius: '16px', overflow: 'hidden' }}>
+				<TableHead>
+					<TableRow
+						sx={{
+							bgcolor: 'rgba(235, 249, 251, 1)',
+							'& .MuiTableCell-root': {
+								fontSize: 16,
+								fontWeight: 400,
+								textAlign: 'center',
+								color: 'grey.600',
+								fontSizeAdjust: '0.5',
+								py: 2,
+							},
+						}}
+					>
+						{baseList.map((item, index) => (
+							<TableCell key={index}>
+								<Typography variant='subtitle1' fontWeight={600}>
+									{(lang === 'uz' ? langUz : langRu)[item]}
+								</Typography>
+							</TableCell>
+						))}
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{array.slice(page * 10, page * 10 + 9).map(human => (
+						<TableRow
+							key={human.passport}
+							onClick={() => navigate(`/user-id/${human.id}`)}
+							sx={{
+								cursor: 'pointer',
+								'&:hover': { bgcolor: 'grey.100' },
+								'& .MuiTableCell-root': {
+									textAlign: 'center',
+									py: 2,
+								},
+							}}
+						>
+							{baseList.map((item, idx) =>
+								item === 'image' ? (
+									<TableCell key={1000 - idx}>
+										<Box sx={{ display: 'flex', justifyContent: 'center' }}>
+											<Box
+												component='img'
+												src={human.imageUrl}
+												alt={item}
+												sx={{ width: 40, height: 40, borderRadius: '50%' }}
+											/>
+										</Box>
+									</TableCell>
+								) : item === 'where' ? (
+									<TableCell key={idx}>
+										<Typography>
+											{(lang === 'uz' ? langUz : langRu)[human['where']]}
+										</Typography>
+									</TableCell>
+								) : (
+									<TableCell key={idx}>
+										<Typography>{human[item]}</Typography>
+									</TableCell>
+								)
+							)}
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+
+			<Box
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					gap: 5,
+					position: 'absolute',
+					bottom: 28,
+					left: '50%',
+					transform: 'translateX(-50%)',
 				}}
 			>
-				{baseList.map((item, index) => (
-					<li
-						key={index}
-						className='flex items-center justify-center text-center text-base font-semibold text-gray-600'
-					>
-						{(lang === 'uz' ? langUz : langRu)[item]}
-					</li>
-				))}
-			</ul>
-
-			{array.slice(page * 10, page * 10 + 9).map(human => (
-				<ul
-					key={human.passport}
-					onClick={() => navigate(`/user-id/${human.id}`)}
-					className='grid cursor-pointer'
-					style={{ gridTemplateColumns: `repeat(${numberOfPages}, 1fr)` }}
-				>
-					{baseList.map((item, idx) =>
-						item === 'image' ? (
-							<div
-								key={1000 - idx}
-								className='flex items-center justify-center'
-							>
-								<img
-									className='w-10 h-10 rounded-full'
-									src={human.imageUrl}
-									alt={item}
-								/>
-							</div>
-						) : item === 'where' ? (
-							<li
-								key={idx}
-								className='flex items-center justify-center text-center'
-							>
-								{(lang === 'uz' ? langUz : langRu)[human['where']]}
-							</li>
-						) : (
-							<p
-								key={idx}
-								className='flex items-center justify-center text-center'
-							>
-								{human[item]}
-							</p>
-						)
-					)}
-				</ul>
-			))}
-
-			<div className='flex items-center justify-center gap-10 absolute bottom-7 left-1/2 right-1/2'>
-				<button
-					className='px-6 py-3 rounded-2xl text-nowrap'
-					style={{
+				<Button
+					variant='outlined'
+					onClick={() => page && setPage(prev => prev - 1)}
+					disabled={!page}
+					sx={{
+						px: 3,
+						py: 1.5,
+						borderRadius: '16px',
 						color: page ? 'rgba(100, 109, 126, 1)' : 'rgba(191, 195, 202, 1)',
+						borderColor: page
+							? 'rgba(6, 186, 209, 1)'
+							: 'rgba(180, 234, 241, 1)',
 						fontSize: 17,
 						fontWeight: 600,
-						border: page
-							? '1px solid rgba(6, 186, 209, 1)'
-							: '1px solid rgba(180, 234, 241, 1)',
+						textTransform: 'none',
 					}}
-					onClick={() => page && setPage(prev => prev - 1)}
 				>
 					{lang === 'uz' ? langUz.prev : langRu.prev}
-				</button>
+				</Button>
 
-				{page + 1}
+				<Typography sx={{ fontSize: 17, fontWeight: 600 }}>
+					{page + 1}
+				</Typography>
 
-				<button
-					className='px-6 py-3 rounded-2xl text-nowrap'
-					style={{
+				<Button
+					variant='outlined'
+					onClick={() =>
+						page < Math.floor(array.length / 9) && setPage(prev => prev + 1)
+					}
+					disabled={page >= Math.floor(array.length / 9)}
+					sx={{
+						px: 3,
+						py: 1.5,
+						borderRadius: '16px',
 						color:
 							page < Math.floor(array.length / 9)
 								? 'rgba(100, 109, 126, 1)'
 								: 'rgba(191, 195, 202, 1)',
+						borderColor:
+							page < Math.floor(array.length / 9)
+								? 'rgba(6, 186, 209, 1)'
+								: 'rgba(180, 234, 241, 1)',
 						fontSize: 17,
 						fontWeight: 600,
-						border:
-							page < Math.floor(array.length / 9)
-								? '1px solid rgba(6, 186, 209, 1)'
-								: '1px solid rgba(180, 234, 241, 1)',
+						textTransform: 'none',
 					}}
-					onClick={() =>
-						page < Math.floor(array.length / 9) && setPage(prev => prev + 1)
-					}
 				>
 					{lang === 'uz' ? langUz.next : langRu.next}
-				</button>
-			</div>
-		</div>
+				</Button>
+			</Box>
+		</Box>
 	)
 }
-
 export default TablePage

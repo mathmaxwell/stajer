@@ -31,7 +31,6 @@
 		"react-hook-form": "^7.56.4",
 		"react-router-dom": "^7.6.0",
 		"styled-components": "^6.1.18",
-		"tailwindcss": "^4.1.7",
 		"zustand": "^5.0.4"
 	},
 	"devDependencies": {

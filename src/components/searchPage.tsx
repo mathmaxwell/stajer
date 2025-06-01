@@ -1,11 +1,10 @@
-import { IconButton } from '@mui/material'
-
+import { Box, IconButton, TextField, Button, Typography } from '@mui/material'
+import { Settings } from '@mui/icons-material'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
-import { Settings } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 
-const searchPage = ({
+const SearchPage = ({
 	search,
 	setSearch,
 	setSettings,
@@ -16,28 +15,61 @@ const searchPage = ({
 }) => {
 	const navigate = useNavigate()
 	const { lang } = useLang()
+
 	return (
-		<div className='bg-white w-full rounded-2xl flex items-center justify-between p-5'>
-			<IconButton onClick={() => setSettings(true)}>
-				<p className='text-lg font-medium'>
-					{(lang === 'uz' ? langUz : langRu).baseEmployees.toUpperCase()}
-				</p>
+		<Box
+			sx={{
+				bgcolor: '#fff',
+				width: '100%',
+				borderRadius: '16px',
+				border: 'none',
+				outline: 'none',
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'space-between',
+				p: 2.5,
+			}}
+		>
+			<IconButton
+				onClick={() => setSettings(true)}
+				sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+			>
+				<Typography
+					sx={{
+						fontSize: 18,
+						fontWeight: 500,
+						textTransform: 'uppercase',
+					}}
+				>
+					{(lang === 'uz' ? langUz : langRu).baseEmployees}
+				</Typography>
 				<Settings />
 			</IconButton>
 
-			<input
+			<TextField
 				type='text'
 				placeholder='Search'
-				className='py-3 px-5 border rounded-2xl'
-				onChange={e => setSearch(e.target.value)}
 				value={search}
+				onChange={e => setSearch(e.target.value)}
+				variant='outlined'
+				sx={{
+					'& .MuiOutlinedInput-root': {
+						borderRadius: '16px',
+					},
+				}}
 			/>
 
-			<button onClick={() => navigate('/add-employees')}>
+			<Button
+				variant='contained'
+				onClick={() => navigate('/add-employees')}
+				sx={{
+					borderRadius: '16px',
+					textTransform: 'none',
+				}}
+			>
 				{lang === 'uz' ? langUz.addEmployees : langRu.addEmployees}
-			</button>
-		</div>
+			</Button>
+		</Box>
 	)
 }
-
-export default searchPage
+export default SearchPage

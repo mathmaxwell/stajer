@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Box, Typography, IconButton, Paper } from '@mui/material'
+import { ExitToApp } from '@mui/icons-material'
+
 import employees from '../employees/employees'
 import type { IEmployees } from '../types/types'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
-import { IconButton, Typography } from '@mui/material'
-import { ExitToApp } from '@mui/icons-material'
 import UserPage from './userPage'
 
 const UserId = () => {
 	const navigate = useNavigate()
 	const { lang } = useLang()
 	const { id } = useParams<{ id: string }>()
-	const [array, setArray] = useState([] as IEmployees[])
+	const [array, setArray] = useState<IEmployees[]>([])
+
 	useEffect(() => {
 		const fetch = async () => {
 			const data = (await employees) || []
@@ -21,22 +23,36 @@ const UserId = () => {
 		}
 		fetch()
 	}, [id])
+
 	return (
-		<div className='rounded-2xl w-full h-full py-3 px-5'>
-			<div className='flex items-center justify-between'>
-				<Typography
-					variant='h1'
-					color='initial'
-					style={{ fontSize: 18, fontWeight: 500 }}
-				>
+		<Paper
+			elevation={3}
+			sx={{
+				borderRadius: 4,
+				width: '100%',
+				height: '100%',
+				p: 3,
+				boxSizing: 'border-box',
+			}}
+		>
+			<Box
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'space-between',
+					mb: 2,
+				}}
+			>
+				<Typography variant='h6' fontWeight={500}>
 					{lang === 'uz' ? langUz.fullInfo : langRu.fullInfo}
 				</Typography>
-				<IconButton aria-label='' onClick={() => navigate('/base')}>
+				<IconButton onClick={() => navigate('/base')}>
 					<ExitToApp />
 				</IconButton>
-			</div>
+			</Box>
+
 			{array.length > 0 && <UserPage />}
-		</div>
+		</Paper>
 	)
 }
 

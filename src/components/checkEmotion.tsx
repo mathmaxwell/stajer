@@ -1,14 +1,30 @@
-import useLang from '../lang/lang'
-import MyPieChart from '../elements/MyPieChart'
-import { langRu, langUz } from '../lang/language'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useStore from '../elements/setHomePage'
-import { useEffect, useState } from 'react'
+import useLang from '../lang/lang'
+import { langRu, langUz } from '../lang/language'
 import employees from '../employees/employees'
 import type { IEmployees } from '../types/types'
+import MyPieChart from '../elements/MyPieChart'
+import {
+	Box,
+	Card,
+	CardContent,
+	Typography,
+	Button,
+	List,
+	ListItem,
+	ListItemText,
+	Divider,
+} from '@mui/material'
+
 const CheckEmotion = () => {
 	const [array, setArray] = useState<IEmployees[]>([])
 	const [emotions, setEmotions] = useState<Record<string, number>>({})
+	const { setPage } = useStore()
+	const navigate = useNavigate()
+	const { lang } = useLang()
+
 	useEffect(() => {
 		const fetch = async () => {
 			const data = (await employees) || []
@@ -23,61 +39,78 @@ const CheckEmotion = () => {
 		}
 
 		fetch()
-	}, []) 
-	const { setPage } = useStore()
-	const navigate = useNavigate()
-	const { lang } = useLang()
+	}, [])
+
 	return (
-		<div className=' rounded-2xl w-full  flex justify-between items-center gap-5'>
-			<div className='bg-white w-full h-full rounded-2xl shadow py-3 px-5'>
-				<p style={{ fontWeight: 500, fontSize: 18 }}>
-					{lang === 'uz' ? langUz.employeesMood : langRu.employeesMood}
-				</p>
-				<div className='flex items-end justify-between gap-2 w-full '>
-					<div>
-						<MyPieChart dataObject={emotions} />
-					</div>
-					<button
-						className='flex items-center justify-center'
-						onClick={() => {
-							navigate('base/all-mood')
-							setPage('base')
+		<Box sx={{ display: 'flex', gap: 3, width: '100%', p: 0 }}>
+			<Card sx={{ flex: 1, borderRadius: 4, boxShadow: 3 }}>
+				<CardContent>
+					<Typography variant='h6' fontWeight={500}>
+						{lang === 'uz' ? langUz.employeesMood : langRu.employeesMood}
+					</Typography>
+					<Box
+						sx={{
+							display: 'flex',
+							justifyContent: 'space-between',
+							alignItems: 'flex-end',
+							mt: 2,
 						}}
 					>
-						{lang === 'uz' ? langUz.viewAll : langRu.viewAll}
-					</button>
-				</div>
-			</div>
-			<div className='bg-white w-full h-full rounded-2xl shadow py-3 px-5 flex flex-col items-center justify-between'>
-				<p style={{ fontWeight: 500, fontSize: 18, marginRight: 'auto' }}>
-					{lang === 'uz' ? langUz.birthdays : langRu.birthdays}
-				</p>
-				<ul className='flex flex-col items-start justify-between gap-2'>
-					{array.map(
-						(user, id) =>
-							id < 5 && (
-								<li
-									key={id}
-									className='flex justify-between items-center w-80 relative  gap-2 before:content-[""] before:w-full before:h-0.25 before:bg-gray-400 before:absolute before:bottom-0'
-								>
-									<div className='flex items-center justify-start gap-2'>
-										<p>{user.fullName}</p>
-									</div>
-									<p>{user.birthday}</p>
-								</li>
-							)
-					)}
-				</ul>
-				<button
-					onClick={() => {
-						navigate('/base/all-birthday')
-						setPage('base')
-					}}
+						<Box>
+							<MyPieChart dataObject={emotions} />
+						</Box>
+						<Button
+							variant='contained'
+							color='primary'
+							onClick={() => {
+								navigate('base/all-mood')
+								setPage('base')
+							}}
+						>
+							{lang === 'uz' ? langUz.viewAll : langRu.viewAll}
+						</Button>
+					</Box>
+				</CardContent>
+			</Card>
+
+			<Card sx={{ flex: 1, borderRadius: 4, boxShadow: 3 }}>
+				<CardContent
+					sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}
 				>
-					{lang === 'uz' ? langUz.viewAll : langRu.viewAll}
-				</button>
-			</div>
-		</div>
+					<Typography variant='h6' fontWeight={500} sx={{ mb: 2 }}>
+						{lang === 'uz' ? langUz.birthdays : langRu.birthdays}
+					</Typography>
+					<List sx={{ flexGrow: 1 }}>
+						{array.slice(0, 5).map((user, id) => (
+							<Box key={id}>
+								<ListItem
+									sx={{
+										display: 'flex',
+										justifyContent: 'space-between',
+										px: 0,
+									}}
+								>
+									<ListItemText primary={user.fullName} />
+									<Typography variant='body2'>{user.birthday}</Typography>
+								</ListItem>
+								{id < 4 && <Divider sx={{ bgcolor: 'grey.400' }} />}
+							</Box>
+						))}
+					</List>
+					<Button
+						variant='contained'
+						color='primary'
+						onClick={() => {
+							navigate('/base/all-birthday')
+							setPage('base')
+						}}
+						sx={{ mt: 2, alignSelf: 'center' }}
+					>
+						{lang === 'uz' ? langUz.viewAll : langRu.viewAll}
+					</Button>
+				</CardContent>
+			</Card>
+		</Box>
 	)
 }
 

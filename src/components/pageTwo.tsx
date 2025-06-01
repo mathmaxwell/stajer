@@ -1,4 +1,5 @@
 import {
+	Box,
 	FormControl,
 	InputLabel,
 	MenuItem,
@@ -8,7 +9,6 @@ import {
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import type { Dayjs } from 'dayjs'
-
 import type { IEmployees } from '../types/types'
 
 const PageTwo = ({
@@ -32,7 +32,14 @@ const PageTwo = ({
 		setArray(prev => (prev ? { ...prev, [field]: value } : null))
 
 	return (
-		<div className='grid grid-cols-2 my-5 gap-5'>
+		<Box
+			sx={{
+				display: 'grid',
+				gridTemplateColumns: '1fr 1fr',
+				gap: 5,
+				my: 5,
+			}}
+		>
 			<TextField
 				label='Номер телефона'
 				value={array?.phone || ''}
@@ -92,7 +99,7 @@ const PageTwo = ({
 					)}
 				</>
 			)}
-		</div>
+		</Box>
 	)
 }
 

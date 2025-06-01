@@ -1,117 +1,192 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Box, Button, Typography, IconButton } from '@mui/material'
 import pb from '../lib/pocketbase'
-import { Box } from '@mui/material'
 import fullFase from '../images/fullFase.svg'
 import uz from '../images/UZ.png'
 import ru from '../images/RU.png'
 import apps from '../images/apps.svg'
 import rows from '../images/rows.svg'
 import exit from '../images/exit.svg'
-import type { ReactNode } from 'react'
 import useLang from '../lang/lang'
 import useStore from '../elements/setHomePage'
 import { langUz, langRu } from '../lang/language'
-interface props {
+import type { ReactNode } from 'react'
+
+interface Props {
 	children: ReactNode
 }
 
-const ProtectedRoute = ({ children }: props) => {
+const ProtectedRoute = ({ children }: Props) => {
 	const { page, setPage } = useStore()
 	const navigate = useNavigate()
+	const { lang, setLang } = useLang()
+
 	async function exitOfSystem() {
 		try {
-			const exitFunction = await pb.authStore.clear()
+			await pb.authStore.clear()
 			navigate('/sign-in')
-			console.log(exitFunction)
 		} catch (error) {
 			console.log(error)
 		}
 		localStorage.setItem('pocketbase_auth', '')
 	}
 
-	const { lang, setLang } = useLang()
-
 	useEffect(() => {
 		if (!pb.authStore.model) {
 			navigate('/sign-in')
 		}
-	}, [])
+	}, [navigate])
+
 	if (!pb.authStore.model) return null
+
 	return (
-		<div className='h-screen flex items-center justify-between gap-5 p-5 bg-gray-200 shadow'>
+		<Box
+			sx={{
+				height: '100vh',
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'space-between',
+				gap: 5,
+				bgcolor: '#eee',
+				boxShadow: 1,
+			}}
+		>
 			<Box
 				sx={{
-					width: 300,
 					bgcolor: 'white',
 					height: '100%',
-					borderRadius: 3,
-					p: 2.5,
+					borderRadius: '16px',
+					width: 300,
+					padding: 2.5,
 					display: 'flex',
 					flexDirection: 'column',
+					alignItems: 'start',
+					justifyContent: 'space-between',
 					gap: 2,
 				}}
 			>
-				<div className='flex gap-2'>
-					<img src={fullFase} alt='face' />
-					<h3
-						style={{
+				<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+					<Box
+						component='img'
+						src={fullFase}
+						alt='face'
+						sx={{ width: 40, height: 40 }}
+					/>
+					<Typography
+						sx={{
 							color: 'rgba(6, 186, 209, 1)',
 							fontSize: 14,
 							fontWeight: 600,
+							lineHeight: 1.2,
 						}}
 					>
-						TAD <br />
-						INDUSTRIES
-					</h3>
-					<button className='ml-auto' onClick={() => setLang()}>
-						<img src={lang === 'uz' ? uz : ru} alt='flag' />
-					</button>
-				</div>
-				<h3 style={{ color: 'rgba(6, 186, 209, 1)', fontSize: 17 }}>FaceIDS</h3>
-				<button
+						TAD <br /> INDUSTRIES
+					</Typography>
+					<IconButton onClick={() => setLang()} sx={{ ml: 'auto' }}>
+						<Box
+							component='img'
+							src={lang === 'uz' ? uz : ru}
+							alt='flag'
+							sx={{ width: 24, height: 24 }}
+						/>
+					</IconButton>
+				</Box>
+				<Typography sx={{ color: 'rgba(6, 186, 209, 1)', fontSize: 17 }}>
+					FaceIDS
+				</Typography>
+				<Button
 					onClick={() => {
 						setPage('monitoring')
 						navigate('/')
 					}}
-					className='flex items-center justify-start gap-2 p-3 rounded-lg'
-					style={
-						page === 'monitoring'
-							? {
-									backgroundColor: 'rgba(235, 249, 251, 1)',
-									color: 'rgba(6, 186, 209, 1)',
-							  }
-							: { color: 'rgba(100, 109, 126, 1)', backgroundColor: 'white' }
+					sx={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'flex-start',
+						gap: 2,
+						p: 1.5,
+						width: '100%',
+						borderRadius: '8px',
+						bgcolor: page === 'monitoring' ? 'rgba(235, 249, 251, 1)' : 'white',
+						color:
+							page === 'monitoring'
+								? 'rgba(6, 186, 209, 1)'
+								: 'rgba(100, 109, 126, 1)',
+						textTransform: 'none',
+						'&:hover': {
+							bgcolor:
+								page === 'monitoring' ? 'rgba(215, 229, 231, 1)' : 'grey.100',
+						},
+					}}
+					startIcon={
+						<Box
+							component='img'
+							src={apps}
+							alt='apps'
+							sx={{ width: 24, height: 24 }}
+						/>
 					}
 				>
-					<img src={apps} alt='apps' />
 					{lang === 'uz' ? langUz.monitoring : langRu.monitoring}
-				</button>
-				<button
-					className='flex items-center justify-start gap-2 p-3 rounded-lg'
+				</Button>
+				<Button
 					onClick={() => {
 						setPage('base')
 						navigate('/base')
 					}}
-					style={
-						page === 'base'
-							? {
-									backgroundColor: 'rgba(235, 249, 251, 1)',
-									color: 'rgba(6, 186, 209, 1)',
-							  }
-							: { color: 'rgba(100, 109, 126, 1)', backgroundColor: 'white' }
+					sx={{
+						display: 'flex',
+						alignItems: 'center',
+						width: '100%',
+						justifyContent: 'flex-start',
+						gap: 2,
+						p: 1.5,
+						borderRadius: '8px',
+						bgcolor: page === 'base' ? 'rgba(235, 249, 251, 1)' : 'white',
+						color:
+							page === 'base'
+								? 'rgba(6, 186, 209, 1)'
+								: 'rgba(100, 109, 126, 1)',
+						textTransform: 'none',
+						'&:hover': {
+							bgcolor: page === 'base' ? 'rgba(215, 229, 231, 1)' : 'grey.100',
+						},
+					}}
+					startIcon={
+						<Box
+							component='img'
+							src={rows}
+							alt='rows'
+							sx={{ width: 24, height: 24 }}
+						/>
 					}
 				>
-					<img src={rows} alt='rows' />
 					{lang === 'uz' ? langUz.baseEmployees : langRu.baseEmployees}
-				</button>
-				<button
-					className='mt-auto flex items-center justify-start gap-2'
+				</Button>
+				<Button
 					onClick={exitOfSystem}
+					sx={{
+						mt: 'auto',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'flex-start',
+						gap: 2,
+						color: 'rgba(100, 109, 126, 1)',
+						textTransform: 'none',
+						'&:hover': { bgcolor: 'grey.100' },
+					}}
+					startIcon={
+						<Box
+							component='img'
+							src={exit}
+							alt='exit'
+							sx={{ width: 24, height: 24 }}
+						/>
+					}
 				>
-					<img src={exit} alt='exit' />
-					<p>{lang === 'uz' ? langUz.exit : langRu.exit}</p>
-				</button>
+					{lang === 'uz' ? langUz.exit : langRu.exit}
+				</Button>
 			</Box>
 			<Box
 				sx={{
@@ -119,12 +194,12 @@ const ProtectedRoute = ({ children }: props) => {
 					bgcolor: 'white',
 					height: '100%',
 					borderRadius: 3,
+					overflow: 'auto',
 				}}
 			>
 				{children}
 			</Box>
-		</div>
+		</Box>
 	)
 }
-
 export default ProtectedRoute

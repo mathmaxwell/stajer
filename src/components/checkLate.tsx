@@ -1,13 +1,33 @@
+import { useEffect, useState } from 'react'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
 import settings from '../images/settings.svg'
 import MyChart from '../elements/MyChart'
-import { useEffect, useState } from 'react'
 import type { IEmployees } from '../types/types'
 import employees from '../employees/employees'
+import {
+	Box,
+	Card,
+	Typography,
+	ToggleButton,
+	ToggleButtonGroup,
+	IconButton,
+} from '@mui/material'
 
 const CheckLate = () => {
-	function getLateMinutes(data: object[], from: string, to: string): number {
+	const date = new Date()
+	const [showWeek, setShowWeek] = useState(true)
+	const { lang } = useLang()
+	const [allLate, setAllLate] = useState([{}])
+
+	const formatDate = (date: Date) => {
+		const dd = String(date.getDate()).padStart(2, '0')
+		const mm = String(date.getMonth() + 1).padStart(2, '0')
+		const yyyy = date.getFullYear()
+		return `${dd}-${mm}-${yyyy}`
+	}
+
+	const getLateMinutes = (data: object[], from: string, to: string): number => {
 		const parseDate = (str: string) => {
 			const [day, month, year] = str.split('-').map(Number)
 			return new Date(year, month - 1, day)
@@ -25,32 +45,19 @@ const CheckLate = () => {
 				})
 			}
 		})
-
 		return total
 	}
-	function getWeekLateData(data: object[]): number[] {
-		const today = new Date()
-		const dayOfWeek = today.getDay() || 7
-		const monday = new Date(today)
-		monday.setDate(today.getDate() - (dayOfWeek - 1))
 
+	const getWeekLateData = (data: object[]): number[] => {
+		const dayOfWeek = date.getDay() || 7
+		const monday = new Date(date)
+		monday.setDate(date.getDate() - (dayOfWeek - 1))
 		const result: number[] = []
-
 		for (let i = 0; i < 7; i++) {
 			const current = new Date(monday)
 			current.setDate(monday.getDate() + i)
-
-			const isPastOrToday = current <= today
-
-			const format = (date: Date) => {
-				const dd = String(date.getDate()).padStart(2, '0')
-				const mm = String(date.getMonth() + 1).padStart(2, '0')
-				const yyyy = date.getFullYear()
-				return `${dd}-${mm}-${yyyy}`
-			}
-
-			const dateStr = format(current)
-
+			const isPastOrToday = current <= date
+			const dateStr = formatDate(current)
 			if (isPastOrToday) {
 				const minutes = getLateMinutes(data, dateStr, dateStr)
 				result.push(minutes)
@@ -58,13 +65,9 @@ const CheckLate = () => {
 				result.push(0)
 			}
 		}
-
 		return result
 	}
 
-	const { lang } = useLang()
-	const [allLate, setAllLate] = useState([{}])
-	const [lateForADay, setLateForADay] = useState(0)
 	useEffect(() => {
 		const fetch = async () => {
 			const data = (await employees) || []
@@ -81,37 +84,40 @@ const CheckLate = () => {
 		}
 		fetch()
 	}, [])
-	const date = new Date()
-	console.log(`${date.getDate() - 1}-${date.getMonth()}-${date.getFullYear()}`)
 
 	return (
-		<div
-			style={{
-				background: 'rgba(255, 255, 255, 1)',
-				boxShadow: 'rgba(149, 157, 165, 0.2)',
+		<Card
+			sx={{
+				borderRadius: '16px',
+				boxShadow: '0 4px 20px rgba(149, 157, 165, 0.2)',
+				bgcolor: '#fff',
+				p: '12px 20px',
+				height: '100%',
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'space-between',
 			}}
-			className='h-full rounded-2xl px-5 py-3 shadow flex flex-col justify-between '
 		>
-			<div className='flex justify-between items-center'>
-				<div className='w-full'>
-					<h4 style={{ fontSize: 18, fontWeight: 500 }}>
+			<Box
+				sx={{
+					display: 'flex',
+					justifyContent: 'space-between',
+					alignItems: 'center',
+				}}
+			>
+				<Box sx={{ width: '100%' }}>
+					<Typography variant='h6' sx={{ fontSize: 18, fontWeight: 500 }}>
 						{lang === 'uz'
 							? langUz.monitoringLateness
 							: langRu.monitoringLateness}
-					</h4>
-					<div className='flex items-center justify-start gap-4'>
-						<p style={{ fontSize: 36, fontWeight: 600 }}>
-							{getLateMinutes(
-								allLate,
-								`${String(date.getDate() - 1).padStart(2, '0')}-${String(
-									date.getMonth()
-								).padStart(2, '0')}-${date.getFullYear()}`,
-								`${String(date.getDate()).padStart(2, '0')}-${String(
-									date.getMonth()
-								).padStart(2, '0')}-${date.getFullYear()}`
-							)}
-						</p>
-						<p style={{ fontWeight: 400, fontSize: 16 }}>
+					</Typography>
+					<Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+						<Typography sx={{ fontSize: 36, fontWeight: 600 }}>
+							{getLateMinutes(allLate, formatDate(date), formatDate(date))} мин
+						</Typography>
+						<Typography
+							sx={{ fontSize: 16, fontWeight: 400, color: 'text.secondary' }}
+						>
 							{lang === 'uz'
 								? langUz.latenessInLastDays_part1
 								: langRu.latenessInLastDays_part1}
@@ -119,84 +125,131 @@ const CheckLate = () => {
 							{lang === 'uz'
 								? langUz.latenessInLastDays_part2
 								: langRu.latenessInLastDays_part2}
-						</p>
-					</div>
-				</div>
-				<div className='flex  gap-5 justify-center items-center'>
-					<button
-						className='rounded-2xl flex items-center justify-center'
-						style={{
-							backgroundColor: 'rgba(235, 249, 251, 1)',
+						</Typography>
+					</Box>
+				</Box>
+				<Box sx={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+					<IconButton
+						sx={{
+							bgcolor: 'rgba(235, 249, 251, 1)',
 							border: '1px solid rgba(180, 234, 241, 1)',
-							width: '44px',
-							height: '44px',
+							borderRadius: '16px',
+							width: 44,
+							height: 44,
 						}}
 					>
-						<img src={settings} alt='settings' />
-					</button>
-					<div
-						className='flex items-center justify-center rounded-2xl '
-						style={{ border: '1px solid rgba(180, 234, 241, 1)' }}
+						<img
+							src={settings}
+							alt='settings'
+							style={{ width: 24, height: 24 }}
+						/>
+					</IconButton>
+					<ToggleButtonGroup
+						value={showWeek ? 'week' : 'month'}
+						exclusive
+						onChange={(_, value) => value && setShowWeek(value === 'week')}
+						sx={{
+							border: '1px solid rgba(180, 234, 241, 1)',
+							borderRadius: '16px',
+						}}
 					>
-						<button
-							className='py-4 rounded-bl-2xl rounded-tl-2xl w-24'
-							style={{
-								backgroundColor: 'rgba(235, 249, 251, 1)',
-								border: '1px solid rgba(180, 234, 241, 1)',
+						<ToggleButton
+							value='week'
+							sx={{
+								bgcolor: showWeek ? 'rgba(235, 249, 251, 1)' : 'white',
+								borderRadius: '16px 0 0 16px',
+								width: 96,
+								py: 2,
+								border: 'none',
 							}}
 						>
 							{lang === 'uz' ? langUz.week : langRu.week}
-						</button>
-						<button
-							className='py-4 rounded-br-2xl rounded-tr-2xl w-24'
-							style={{
-								backgroundColor: 'rgba(235, 249, 251, 1)',
-								border: '1px solid rgba(180, 234, 241, 1)',
+						</ToggleButton>
+						<ToggleButton
+							value='month'
+							sx={{
+								bgcolor: !showWeek ? 'rgba(235, 249, 251, 1)' : 'white',
+								borderRadius: '0 16px 16px 0',
+								width: 96,
+								py: 2,
+								border: 'none',
 							}}
 						>
 							{lang === 'uz' ? langUz.month : langRu.month}
-						</button>
-					</div>
-				</div>
-			</div>
-			<div className='flex items-center justify-center'>
-				<div className='w-full h-full flex items-center justify-center'>
-					<div
-						style={{ width: '405px', height: '265px' }}
-						className='flex items-center justify-center'
-					>
+						</ToggleButton>
+					</ToggleButtonGroup>
+				</Box>
+			</Box>
+			<Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flex: 1 }}>
+				<Box
+					sx={{
+						width: showWeek ? '33%' : '100%',
+						display: 'flex',
+						justifyContent: 'center',
+						alignItems: 'center',
+					}}
+				>
+					{showWeek ? (
 						<MyChart informationArray={getWeekLateData(allLate)} />
-					</div>
-				</div>
-				<div className='h-full flex flex-col gap-3 justify-end '>
-					<div className='bg-white shadow-2xl rounded-2xl py-3 px-4 w-72'>
-						<p style={{ fontWeight: 500, fontSize: 18 }}>
+					) : (
+						<MyChart informationArray={getWeekLateData(allLate)} month={2} />
+					)}
+				</Box>
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						gap: 3,
+						ml: 'auto',
+					}}
+				>
+					<Card
+						sx={{
+							borderRadius: '16px',
+							boxShadow: '0 4px 20px rgba(149, 157, 165, 0.2)',
+							p: '12px 16px',
+							width: 288,
+						}}
+					>
+						<Typography sx={{ fontSize: 18, fontWeight: 500 }}>
 							{lang === 'uz' ? langUz.lostHoursPerDay : langRu.lostHoursPerDay}
-						</p>
-						<p style={{ fontSize: 36, fontWeight: 600 }}>
-							12
-							<span style={{ fontSize: 20, fontWeight: 400 }}>
+						</Typography>
+						<Typography sx={{ fontSize: 36, fontWeight: 600 }}>
+							12{' '}
+							<Typography
+								component='span'
+								sx={{ fontSize: 20, fontWeight: 400 }}
+							>
 								{lang === 'uz' ? 'soat' : 'час'}
-							</span>
-						</p>
-					</div>
-					<div className='bg-white shadow-2xl rounded-2xl py-3 px-4 w-72 ml-auto'>
-						<p style={{ fontWeight: 500, fontSize: 18 }}>
+							</Typography>
+						</Typography>
+					</Card>
+					<Card
+						sx={{
+							borderRadius: '16px',
+							boxShadow: '0 4px 20px rgba(149, 157, 165, 0.2)',
+							p: '12px 16px',
+							width: 288,
+						}}
+					>
+						<Typography sx={{ fontSize: 18, fontWeight: 500 }}>
 							{lang === 'uz'
 								? langUz.lostHoursPerWeek
 								: langRu.lostHoursPerWeek}
-						</p>
-						<p style={{ fontSize: 36, fontWeight: 600 }}>
-							48
-							<span style={{ fontSize: 20, fontWeight: 400 }}>
+						</Typography>
+						<Typography sx={{ fontSize: 36, fontWeight: 600 }}>
+							48{' '}
+							<Typography
+								component='span'
+								sx={{ fontSize: 20, fontWeight: 400 }}
+							>
 								{lang === 'uz' ? 'soat' : 'час'}
-							</span>
-						</p>
-					</div>
-				</div>
-			</div>
-		</div>
+							</Typography>
+						</Typography>
+					</Card>
+				</Box>
+			</Box>
+		</Card>
 	)
 }
-
 export default CheckLate

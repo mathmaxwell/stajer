@@ -6,7 +6,6 @@ async function employees() {
 		const employees: RecordModel[] = await pb
 			.collection('employees')
 			.getFullList()
-
 		const result: IEmployees[] = employees.map(record => ({
 			image: record.image,
 			fullName: record.fullName,

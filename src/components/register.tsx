@@ -1,10 +1,11 @@
 import { useForm } from 'react-hook-form'
-import { InputAdornment, TextField } from '@mui/material'
+import { Box, InputAdornment, TextField, Button } from '@mui/material'
 import RemoveRedEyeTwoToneIcon from '@mui/icons-material/RemoveRedEyeTwoTone'
 import DisabledVisibleTwoToneIcon from '@mui/icons-material/DisabledVisibleTwoTone'
 import { useState } from 'react'
 import pb from '../lib/pocketbase'
 import { useNavigate } from 'react-router-dom'
+
 const Register = () => {
 	const navigate = useNavigate()
 	type formData = {
@@ -14,6 +15,7 @@ const Register = () => {
 	}
 	const [showPassword, setShowPassword] = useState(false)
 	const { register, handleSubmit, watch } = useForm<formData>()
+
 	async function onSubmit(data: formData) {
 		try {
 			const newUser = await pb.collection('users').create({
@@ -23,48 +25,58 @@ const Register = () => {
 				passwordConfirm: data.password,
 			})
 			console.log(newUser)
-
 			alert('profil yaratildi')
 			navigate('/sign-in')
 		} catch (error) {
 			console.log(error)
 		}
 	}
+
 	const email = watch('email')
 	const login = watch('username')
 	const password = watch('password')
+
 	return (
-		<form
+		<Box
+			component='form'
 			onSubmit={handleSubmit(onSubmit)}
-			className='flex flex-col items-start w-full rounded-2xl gap-5'
+			sx={{
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'flex-start',
+				width: '100%',
+				gap: 5,
+				borderRadius: '16px',
+			}}
 		>
 			<TextField
 				autoComplete='current-login'
-				label='login'
+				label='Login'
 				variant='outlined'
 				type='text'
-				className='w-full '
+				fullWidth
 				{...register('username')}
 			/>
 			<TextField
-				label='email'
+				label='Email'
 				variant='outlined'
 				autoComplete='current-email'
+				fullWidth
 				{...register('email')}
-				className='w-full'
 			/>
 			<TextField
 				autoComplete='current-password'
-				label='password'
+				label='Password'
 				variant='outlined'
 				type={showPassword ? 'text' : 'password'}
-				className='w-full '
+				fullWidth
 				{...register('password')}
 				InputProps={{
 					endAdornment: (
 						<InputAdornment
 							position='end'
 							onClick={() => setShowPassword(prev => !prev)}
+							sx={{ cursor: 'pointer' }}
 						>
 							{showPassword ? (
 								<RemoveRedEyeTwoToneIcon />
@@ -75,21 +87,29 @@ const Register = () => {
 					),
 				}}
 			/>
-
-			<button
+			<Button
 				type='submit'
-				className='w-full py-3 rounded-2xl text-white'
-				style={{
-					backgroundColor:
+				variant='contained'
+				sx={{
+					width: '100%',
+					py: 1.5,
+					borderRadius: '16px',
+					bgcolor:
 						login && password && email
 							? 'rgba(6, 186, 209, 1)'
 							: 'rgba(180, 234, 241, 1)',
+					color: 'white',
+					'&:hover': {
+						bgcolor:
+							login && password && email
+								? 'rgba(5, 167, 188, 1)'
+								: 'rgba(160, 214, 221, 1)',
+					},
 				}}
 			>
 				Зарегистрироваться
-			</button>
-		</form>
+			</Button>
+		</Box>
 	)
 }
-
 export default Register

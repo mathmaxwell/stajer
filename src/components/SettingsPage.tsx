@@ -21,13 +21,22 @@ const SettingsPage = ({
 }) => {
 	const { fullList, setBaseList, baseList } = baseStory()
 	const { lang } = useLang()
+
 	return (
 		<Dialog fullWidth open={settings} onClose={() => setSettings(false)}>
 			<DialogTitle>
 				{lang === 'uz' ? langUz.settings : langRu.settings}
 			</DialogTitle>
 			<DialogContent>
-				<Box noValidate component='form' className='grid grid-cols-2'>
+				<Box
+					component='form'
+					noValidate
+					sx={{
+						display: 'grid',
+						gridTemplateColumns: '1fr 1fr',
+						gap: 2,
+					}}
+				>
 					{fullList.map((item, index) => (
 						<FormControlLabel
 							key={index}
@@ -39,7 +48,6 @@ const SettingsPage = ({
 										const newList = baseList.includes(item)
 											? baseList.filter(i => i !== item)
 											: [...baseList, item]
-
 										setBaseList(newList)
 									}}
 								/>
@@ -50,10 +58,11 @@ const SettingsPage = ({
 				</Box>
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={() => setSettings(false)}>zakrit</Button>
+				<Button onClick={() => setSettings(false)}>
+					{lang === 'uz' ? langUz.close : langRu.close}
+				</Button>
 			</DialogActions>
 		</Dialog>
 	)
 }
-
 export default SettingsPage

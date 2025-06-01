@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { Box, Stack, Paper } from '@mui/material'
 
 import employees from '../employees/employees'
 import baseStory from '../employees/baseStory'
@@ -44,16 +45,37 @@ const Base = () => {
 	}, [search])
 
 	return (
-		<div className='flex flex-col gap-5 h-full bg-gray-200'>
-			<SettingsPage settings={settings} setSettings={setSettings} />
-			<SearchPage
-				setSettings={setSettings}
-				search={search}
-				setSearch={setSearch}
-			/>
+		<Box
+			sx={{
+				display: 'flex',
+				flexDirection: 'column',
+				gap: 2,
+				height: '100%',
+				bgcolor: '#eee',
+			}}
+		>
+			<Paper elevation={3}>
+				<SettingsPage settings={settings} setSettings={setSettings} />
+			</Paper>
 
-			<TablePage array={array} />
-		</div>
+			<Paper
+				sx={{ borderRadius: '16px', border: 'none', outline: 'none' }}
+				elevation={3}
+			>
+				<SearchPage
+					setSettings={setSettings}
+					search={search}
+					setSearch={setSearch}
+				/>
+			</Paper>
+
+			<Paper
+				elevation={3}
+				sx={{ flex: 1, overflow: 'auto', borderRadius: '16px' }}
+			>
+				<TablePage array={array} />
+			</Paper>
+		</Box>
 	)
 }
 

@@ -11,7 +11,6 @@ import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { DatePicker } from '@mui/x-date-pickers'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
-
 import type { IEmployees } from '../types/types'
 
 const HeaderPage = ({
@@ -30,13 +29,33 @@ const HeaderPage = ({
 	setDownload: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
 	const updateArray = (field: keyof IEmployees, value: string | File) =>
-		setArray(prev => (prev ? { ...prev, [field]: value } : null))
+		setArray(prev => {
+			const newArray = prev ? { ...prev, [field]: value } : null
+			console.log('HeaderPage Updated:', field, value, newArray)
+			return newArray
+		})
 
 	return (
-		<Box className='flex gap-4'>
+		<Box sx={{ display: 'flex', gap: 4 }}>
 			{download ? (
-				<label className='w-[200px] h-[250px] flex items-center justify-center border-2 border-dashed rounded-xl cursor-pointer hover:bg-gray-100'>
-					<span className='text-gray-500'>Загрузить фото</span>
+				<label
+					style={{
+						width: 200,
+						height: 250,
+						border: '2px dashed',
+						borderColor: 'grey.400',
+						borderRadius: '12px',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						cursor: 'pointer',
+					}}
+					onMouseOver={e =>
+						(e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.04)')
+					}
+					onMouseOut={e => (e.currentTarget.style.backgroundColor = 'white')}
+				>
+					<span style={{ color: 'grey.500' }}>Загрузить фото</span>
 					<input
 						type='file'
 						accept='image/*'
@@ -55,27 +74,47 @@ const HeaderPage = ({
 					/>
 				</label>
 			) : img ? (
-				<img
+				<Box
+					component='img'
 					src={img}
-					className='w-[200px] h-[250px] rounded-xl cursor-pointer'
+					sx={{
+						width: 200,
+						height: 250,
+						borderRadius: '12px',
+						cursor: 'pointer',
+						objectFit: 'cover',
+					}}
 					onClick={() => setDownload(true)}
 				/>
 			) : (
-				<div
+				<Box
+					sx={{
+						width: 200,
+						height: 250,
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						bgcolor: 'grey.100',
+						color: 'grey.400',
+						borderRadius: '12px',
+						cursor: 'pointer',
+						'&:hover': { bgcolor: 'grey.200' },
+					}}
 					onClick={() => setDownload(true)}
-					className='w-[200px] h-[250px] flex items-center justify-center bg-gray-100 text-gray-400 rounded-xl cursor-pointer hover:bg-gray-200'
 				>
-					<PersonAddAltIcon className='text-6xl' />
-				</div>
+					<PersonAddAltIcon sx={{ fontSize: 60 }} />
+				</Box>
 			)}
-			<div className='flex flex-col w-full gap-10'>
+			<Box
+				sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 5 }}
+			>
 				<TextField
 					label='ФИО'
 					value={array?.fullName || ''}
 					fullWidth
 					onChange={e => updateArray('fullName', e.target.value)}
 				/>
-				<div className='grid grid-cols-2 gap-4'>
+				<Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
 					<FormControl fullWidth>
 						<InputLabel id='gender-label'>Пол</InputLabel>
 						<Select
@@ -99,16 +138,13 @@ const HeaderPage = ({
 					<DatePicker
 						label='Дата рождения'
 						value={
-							array?.birthday && dayjs(array.birthday, 'DD-MM-YYYY').isValid()
-								? dayjs(array.birthday, 'DD-MM-YYYY')
-								: null
+							array?.birthday ? dayjs(array.birthday, 'DD-MM-YYYY', true) : null
 						}
-						onChange={(newValue: Dayjs | null) =>
-							updateArray(
-								'birthday',
-								newValue ? newValue.format('DD-MM-YYYY') : ''
-							)
-						}
+						onChange={(newValue: Dayjs | null) => {
+							const formatted = newValue ? newValue.format('DD-MM-YYYY') : ''
+							console.log('Selected birthday:', formatted)
+							updateArray('birthday', formatted)
+						}}
 						format='DD-MM-YYYY'
 					/>
 					<TextField
@@ -117,8 +153,8 @@ const HeaderPage = ({
 						fullWidth
 						onChange={e => updateArray('birthPlace', e.target.value)}
 					/>
-				</div>
-			</div>
+				</Box>
+			</Box>
 		</Box>
 	)
 }
