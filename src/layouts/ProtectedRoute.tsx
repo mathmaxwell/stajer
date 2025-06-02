@@ -1,3 +1,4 @@
+//adaptiva sm,md
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Box, Button, Typography, IconButton } from '@mui/material'
@@ -45,9 +46,13 @@ const ProtectedRoute = ({ children }: Props) => {
 			sx={{
 				height: '100vh',
 				display: 'flex',
+				flexDirection: {
+					lg: 'row',
+					md: 'column',
+				},
 				alignItems: 'center',
 				justifyContent: 'space-between',
-				gap: 5,
+				gap: 2,
 				bgcolor: '#eee',
 				boxShadow: 1,
 			}}
@@ -55,18 +60,40 @@ const ProtectedRoute = ({ children }: Props) => {
 			<Box
 				sx={{
 					bgcolor: 'white',
-					height: '100%',
+					height: {
+						lg: '100%',
+						md: 100,
+					},
 					borderRadius: '16px',
-					width: 300,
+					width: {
+						lg: 300,
+						md: '100%',
+					},
 					padding: 2.5,
 					display: 'flex',
-					flexDirection: 'column',
+					flexDirection: {
+						lg: 'column',
+						md: 'row',
+					},
 					alignItems: 'start',
-					justifyContent: 'space-between',
+					justifyContent: {
+						lg: 'space-between',
+						md: 'center',
+					},
 					gap: 2,
 				}}
 			>
-				<Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+				<Box
+					sx={{
+						display: 'flex',
+						alignItems: 'center',
+						gap: 2,
+						mr: {
+							lg: 0,
+							md: 'auto',
+						},
+					}}
+				>
 					<Box
 						component='img'
 						src={fullFase}
@@ -92,7 +119,16 @@ const ProtectedRoute = ({ children }: Props) => {
 						/>
 					</IconButton>
 				</Box>
-				<Typography sx={{ color: 'rgba(6, 186, 209, 1)', fontSize: 17 }}>
+				<Typography
+					sx={{
+						color: 'rgba(6, 186, 209, 1)',
+						fontSize: 17,
+						display: {
+							lg: 'block',
+							md: 'none',
+						},
+					}}
+				>
 					FaceIDS
 				</Typography>
 				<Button
@@ -106,7 +142,10 @@ const ProtectedRoute = ({ children }: Props) => {
 						justifyContent: 'flex-start',
 						gap: 2,
 						p: 1.5,
-						width: '100%',
+						width: {
+							lg: '100%',
+							md: '200px',
+						},
 						borderRadius: '8px',
 						bgcolor: page === 'monitoring' ? 'rgba(235, 249, 251, 1)' : 'white',
 						color:
@@ -138,7 +177,10 @@ const ProtectedRoute = ({ children }: Props) => {
 					sx={{
 						display: 'flex',
 						alignItems: 'center',
-						width: '100%',
+						width: {
+							lg: '100%',
+							md: '200px',
+						},
 						justifyContent: 'flex-start',
 						gap: 2,
 						p: 1.5,
@@ -167,10 +209,20 @@ const ProtectedRoute = ({ children }: Props) => {
 				<Button
 					onClick={exitOfSystem}
 					sx={{
-						mt: 'auto',
+						mt: {
+							lg: 'auto',
+							md: 'none',
+						},
+						ml: {
+							lg: 0,
+							md: 'auto',
+						},
 						display: 'flex',
 						alignItems: 'center',
-						justifyContent: 'flex-start',
+						justifyContent: {
+							lg: 'flex-start',
+							md: 'center',
+						},
 						gap: 2,
 						color: 'rgba(100, 109, 126, 1)',
 						textTransform: 'none',

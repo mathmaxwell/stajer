@@ -5,7 +5,7 @@ import { langRu, langUz } from '../lang/language'
 import { useNavigate } from 'react-router-dom'
 import { Box, Card, Typography } from '@mui/material'
 import useStore from '../elements/setHomePage'
-
+//adaptiva sm, md
 interface ICards {
 	about: string
 	image: string
@@ -37,7 +37,7 @@ const CardsComponent = () => {
 				borderRadius: '16px',
 				border: 'none',
 				outline: 'none',
-				gap: 2,
+				gap: 1,
 			}}
 		>
 			{cards.map((card, i) =>
@@ -51,7 +51,11 @@ const CardsComponent = () => {
 						sx={{
 							border: 'none',
 							outline: 'none',
-							height: 140,
+							position: 'relative',
+							height: {
+								lg: 140,
+								md: 120,
+							},
 							bgcolor: '#fff',
 							cursor: 'pointer',
 							'&:hover': { boxShadow: 6 },
@@ -75,9 +79,18 @@ const CardsComponent = () => {
 								display: 'flex',
 								alignItems: 'center',
 								justifyContent: 'space-between',
+								position: 'absolute',
+								bottom: 2,
+								left: 12,
+								width: '90%',
 							}}
 						>
-							<Typography sx={{ fontWeight: 600, fontSize: 36 }}>
+							<Typography
+								sx={{
+									fontWeight: 600,
+									fontSize: 36,
+								}}
+							>
 								{card.number}
 							</Typography>
 							<Box

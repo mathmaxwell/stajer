@@ -1,5 +1,14 @@
-import { Box, Button, Paper, Typography } from '@mui/material'
+import {
+	Box,
+	Button,
+	Paper,
+	Typography,
+	Modal,
+	Backdrop,
+	Fade,
+} from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { useState } from 'react'
 
 import ErrorBoundary from './ErrorBoundary'
 import useLang from '../lang/lang'
@@ -25,6 +34,19 @@ const EmployeeForm = () => {
 		createUser,
 		navigate,
 	} = useEmployee()
+	const [open, setOpen] = useState(false)
+
+	const handleOpen = () => setOpen(true)
+	const handleClose = () => setOpen(false)
+
+	const handleConfirm = () => {
+		if (id) {
+			updateUser()
+		} else {
+			createUser()
+		}
+		handleClose()
+	}
 
 	return (
 		<Paper
@@ -54,7 +76,7 @@ const EmployeeForm = () => {
 					<ArrowBackIcon />
 					{lang === 'uz' ? langUz.back : langRu.back}
 				</Typography>
-				<Button variant='contained' onClick={id ? updateUser : createUser}>
+				<Button variant='contained' onClick={handleOpen}>
 					{id ? 'Сохранить' : 'Добавить'}
 				</Button>
 			</Box>
@@ -75,6 +97,47 @@ const EmployeeForm = () => {
 					/>
 				)}
 			</ErrorBoundary>
+			<Modal
+				open={open}
+				onClose={handleClose}
+				closeAfterTransition
+				slots={{ backdrop: Backdrop }}
+				slotProps={{
+					backdrop: {
+						timeout: 500,
+					},
+				}}
+			>
+				<Fade in={open}>
+					<Box
+						sx={{
+							position: 'absolute',
+							top: '50%',
+							left: '50%',
+							transform: 'translate(-50%, -50%)',
+							width: 400,
+							bgcolor: 'background.paper',
+							borderRadius: 2,
+							boxShadow: 24,
+							p: 4,
+						}}
+					>
+						<Typography variant='h6' component='h2' mb={3}>
+							{lang === 'uz'
+								? 'Saqlashni xohlaysizmi?'
+								: 'Сохранить изменения?'}
+						</Typography>
+						<Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+							<Button onClick={handleClose} variant='outlined'>
+								{lang === 'uz' ? 'Bekor qilish' : 'Отмена'}
+							</Button>
+							<Button onClick={handleConfirm} variant='contained'>
+								{lang === 'uz' ? 'Saqlash' : 'Сохранить'}
+							</Button>
+						</Box>
+					</Box>
+				</Fade>
+			</Modal>
 		</Paper>
 	)
 }

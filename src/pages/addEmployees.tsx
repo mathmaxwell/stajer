@@ -1,4 +1,13 @@
-import { Box, Typography, Button } from '@mui/material'
+import {
+	Box,
+	Typography,
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+} from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useNavigate, useParams } from 'react-router-dom'
 import useLang from '../lang/lang'
@@ -18,6 +27,8 @@ const AddEmployees = () => {
 	const [tempDate, setTempDate] = useState<Dayjs | null>(null)
 	const [tempMinutes, setTempMinutes] = useState('')
 	const [img, setImg] = useState<string | null>(null)
+	const [openConfirm, setOpenConfirm] = useState(false) // состояние модального окна
+
 	const formatDateFields = (data: IEmployees) => ({
 		...data,
 		birthday: data.birthday || '',
@@ -56,7 +67,6 @@ const AddEmployees = () => {
 
 	const createUser = async () => {
 		if (!array) {
-			console.log('No array')
 			alert('Заполните данные сотрудника')
 			return
 		}
@@ -83,6 +93,24 @@ const AddEmployees = () => {
 		}
 	}
 
+	const handleOpenConfirm = (e: React.MouseEvent) => {
+		e.stopPropagation()
+		if (!id) {
+			setOpenConfirm(true)
+		} else {
+			updateUser()
+		}
+	}
+
+	const handleConfirmCreate = async () => {
+		setOpenConfirm(false)
+		await createUser()
+	}
+
+	const handleCancelCreate = () => {
+		setOpenConfirm(false)
+	}
+
 	return (
 		<>
 			<Box
@@ -102,7 +130,7 @@ const AddEmployees = () => {
 					<ArrowBackIcon />
 					{lang === 'uz' ? langUz.back : langRu.back}
 				</Typography>
-				<Button variant='contained' onClick={id ? updateUser : createUser}>
+				<Button variant='contained' onClick={handleOpenConfirm}>
 					{id ? 'Сохранить' : 'Добавить'}
 				</Button>
 			</Box>
@@ -120,7 +148,28 @@ const AddEmployees = () => {
 				img={img}
 				setImg={setImg}
 			/>
+
+			<Dialog
+				open={openConfirm}
+				onClose={handleCancelCreate}
+				aria-labelledby='confirm-dialog-title'
+				aria-describedby='confirm-dialog-description'
+			>
+				<DialogTitle id='confirm-dialog-title'>Подтверждение</DialogTitle>
+				<DialogContent>
+					<DialogContentText id='confirm-dialog-description'>
+						Вы действительно хотите создать нового сотрудника?
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleCancelCreate}>Отмена</Button>
+					<Button onClick={handleConfirmCreate} autoFocus>
+						Создать
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</>
 	)
 }
+
 export default AddEmployees

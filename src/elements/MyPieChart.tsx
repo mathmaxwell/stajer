@@ -41,7 +41,7 @@ const MyPieChart = ({ dataObject, onSegmentClick }: IPieChartProps) => {
 				position: 'right',
 			},
 		},
-		onClick: (event, elements) => {
+		onClick: (_, elements) => {
 			if (elements.length > 0 && onSegmentClick) {
 				const index = elements[0].index
 				const emotion = labels[index]
