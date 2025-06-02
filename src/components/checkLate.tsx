@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
-import settings from '../images/settings.svg'
 import MyChart from '../elements/MyChart'
 import type { IEmployees } from '../types/types'
 import employees from '../employees/employees'
@@ -11,88 +10,170 @@ import {
 	Typography,
 	ToggleButton,
 	ToggleButtonGroup,
-	IconButton,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
+	Modal,
+	List,
+	ListItem,
+	ListItemText,
 } from '@mui/material'
 
-const CheckLate = () => {
-	const date = new Date()
-	const [showWeek, setShowWeek] = useState(true)
-	const { lang } = useLang()
-	const [allLate, setAllLate] = useState([{}])
+type LateData = Record<string, number>
 
-	const formatDate = (date: Date) => {
-		const dd = String(date.getDate()).padStart(2, '0')
-		const mm = String(date.getMonth() + 1).padStart(2, '0')
-		const yyyy = date.getFullYear()
-		return `${dd}-${mm}-${yyyy}`
-	}
+const formatDate = (date: Date) =>
+	date.toLocaleDateString('ru-RU').split('.').join('-')
 
-	const getLateMinutes = (data: object[], from: string, to: string): number => {
-		const parseDate = (str: string) => {
-			const [day, month, year] = str.split('-').map(Number)
-			return new Date(year, month - 1, day)
-		}
-		const fromDate = parseDate(from)
-		const toDate = parseDate(to)
-		let total = 0
-		data.forEach(obj => {
-			if (obj && typeof obj === 'object') {
-				Object.entries(obj).forEach(([key, value]) => {
-					const date = parseDate(key)
-					if (date >= fromDate && date <= toDate) {
-						total += Number(value)
-					}
-				})
-			}
-		})
-		return total
-	}
+const parseDate = (str: string) => {
+	const [dd, mm, yyyy] = str.split('-').map(Number)
+	return new Date(yyyy, mm - 1, dd)
+}
 
-	const getWeekLateData = (data: object[]): number[] => {
-		const dayOfWeek = date.getDay() || 7
-		const monday = new Date(date)
-		monday.setDate(date.getDate() - (dayOfWeek - 1))
-		const result: number[] = []
-		for (let i = 0; i < 7; i++) {
-			const current = new Date(monday)
-			current.setDate(monday.getDate() + i)
-			const isPastOrToday = current <= date
-			const dateStr = formatDate(current)
-			if (isPastOrToday) {
-				const minutes = getLateMinutes(data, dateStr, dateStr)
-				result.push(minutes)
-			} else {
-				result.push(0)
-			}
-		}
-		return result
-	}
+const getLateMinutes = (data: LateData[], from: string, to: string): number => {
+	const fromDate = parseDate(from)
+	const toDate = parseDate(to)
+	let total = 0
 
-	useEffect(() => {
-		const fetch = async () => {
-			const data = (await employees) || []
-			data.forEach((user: IEmployees) => {
-				if (user.whenlate) {
-					try {
-						const parsed = JSON.parse(user.whenlate)
-						setAllLate(prev => [...prev, parsed])
-					} catch (error) {
-						console.error(error)
-					}
+	data.forEach(obj => {
+		if (obj && typeof obj === 'object') {
+			Object.entries(obj).forEach(([key, value]) => {
+				const date = parseDate(key)
+				if (date >= fromDate && date <= toDate) {
+					total += Number(value)
 				}
 			})
 		}
-		fetch()
+	})
+	return total
+}
+
+const getWeekLateData = (data: LateData[], today: Date) => {
+	const dayOfWeek = today.getDay() || 7
+	const monday = new Date(today)
+	monday.setDate(today.getDate() - (dayOfWeek - 1))
+
+	return Array.from({ length: 7 }, (_, i) => {
+		const day = new Date(monday)
+		day.setDate(monday.getDate() + i)
+		const str = formatDate(day)
+		return day <= today ? getLateMinutes(data, str, str) : 0
+	})
+}
+
+const getMonthLateData = (data: LateData[], date: Date) => {
+	const year = date.getFullYear()
+	const month = date.getMonth()
+	const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+	return Array.from({ length: daysInMonth }, (_, i) => {
+		const day = new Date(year, month, i + 1)
+		const str = formatDate(day)
+		return day <= new Date() ? getLateMinutes(data, str, str) : 0
+	})
+}
+
+const getLateDetails = (
+	data: LateData[],
+	dateStr: string,
+	employeesData: IEmployees[]
+) => {
+	const result: { name: string; lateTime: number }[] = []
+	data.forEach((obj, index) => {
+		if (obj && typeof obj === 'object' && obj[dateStr]) {
+			const employee = employeesData[index]
+			if (employee) {
+				result.push({
+					name: employee.fullName || `Сотрудник ${index + 1}`, // Изменено с name на fullName
+					lateTime: Number(obj[dateStr]),
+				})
+			}
+		}
+	})
+	return result
+}
+
+const months = [
+	'январь',
+	'февраль',
+	'март',
+	'апрель',
+	'май',
+	'июнь',
+	'июль',
+	'август',
+	'сентябрь',
+	'октябрь',
+	'ноябрь',
+	'декабрь',
+]
+
+const CheckLate = () => {
+	const { lang } = useLang()
+	const today = new Date()
+	const todayStr = formatDate(today)
+	const [month, setMonth] = useState(today.getMonth())
+	const [allLate, setAllLate] = useState<LateData[]>([])
+	const [employeesData, setEmployeesData] = useState<IEmployees[]>([])
+	const [showWeek, setShowWeek] = useState(true)
+	const [modalOpen, setModalOpen] = useState(false)
+	const [selectedDate, setSelectedDate] = useState<string | null>(null)
+
+	const handleBarClick = (dateStr: string) => {
+		setSelectedDate(dateStr)
+		setModalOpen(true)
+	}
+
+	const handleClose = () => {
+		setModalOpen(false)
+		setSelectedDate(null)
+	}
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const data = await employees
+			const lateData = (data || [])
+				.map((user: IEmployees) => {
+					try {
+						return user.whenlate ? JSON.parse(user.whenlate) : null
+					} catch {
+						return null
+					}
+				})
+				.filter(Boolean) as LateData[]
+			setAllLate(lateData)
+			setEmployeesData(data || [])
+		}
+		fetchData()
 	}, [])
+
+	const todayLate = useMemo(
+		() => getLateMinutes(allLate, todayStr, todayStr),
+		[allLate]
+	)
+
+	const weekLate = useMemo(() => getWeekLateData(allLate, today), [allLate])
+
+	const monthLate = useMemo(() => {
+		const date = new Date(today.getFullYear(), month)
+		return getMonthLateData(allLate, date)
+	}, [allLate, month])
+
+	const lateDetails = useMemo(() => {
+		if (!selectedDate) return []
+		return getLateDetails(allLate, selectedDate, employeesData)
+	}, [selectedDate, allLate, employeesData])
+
+	const currentLang = lang === 'uz' ? langUz : langRu
 
 	return (
 		<Card
 			sx={{
-				borderRadius: '16px',
-				boxShadow: '0 4px 20px rgba(149, 157, 165, 0.2)',
+				borderRadius: 4,
+				boxShadow: 3,
 				bgcolor: '#fff',
-				p: '12px 20px',
-				height: '400px',
+				p: 2,
+				height: 400,
 				display: 'flex',
 				flexDirection: 'column',
 				justifyContent: 'space-between',
@@ -105,151 +186,146 @@ const CheckLate = () => {
 					alignItems: 'center',
 				}}
 			>
-				<Box sx={{ width: '100%' }}>
-					<Typography variant='h6' sx={{ fontSize: 18, fontWeight: 500 }}>
-						{lang === 'uz'
-							? langUz.monitoringLateness
-							: langRu.monitoringLateness}
-					</Typography>
+				<Box>
+					<Typography variant='h6'>{currentLang.monitoringLateness}</Typography>
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
 						<Typography sx={{ fontSize: 36, fontWeight: 600 }}>
-							{getLateMinutes(allLate, formatDate(date), formatDate(date))} мин
+							{todayLate} мин
 						</Typography>
-						<Typography
-							sx={{ fontSize: 16, fontWeight: 400, color: 'text.secondary' }}
-						>
-							{lang === 'uz'
-								? langUz.latenessInLastDays_part1
-								: langRu.latenessInLastDays_part1}
+						<Typography color='text.secondary'>
+							{currentLang.latenessInLastDays_part1}
 							<br />
-							{lang === 'uz'
-								? langUz.latenessInLastDays_part2
-								: langRu.latenessInLastDays_part2}
+							{currentLang.latenessInLastDays_part2}
 						</Typography>
 					</Box>
 				</Box>
-				<Box sx={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-					<IconButton
-						sx={{
-							bgcolor: 'rgba(235, 249, 251, 1)',
-							border: '1px solid rgba(180, 234, 241, 1)',
-							borderRadius: '16px',
-							width: 44,
-							height: 44,
-						}}
-					>
-						<img
-							src={settings}
-							alt='settings'
-							style={{ width: 24, height: 24 }}
-						/>
-					</IconButton>
+				<Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+					<FormControl sx={{ minWidth: 120 }}>
+						<InputLabel id='month-select-label'>Месяц</InputLabel>
+						<Select
+							labelId='month-select-label'
+							id='month-select'
+							value={month}
+							label='Месяц'
+							onChange={e => {
+								setMonth(Number(e.target.value))
+								setShowWeek(false)
+							}}
+						>
+							{months.map((name, index) => (
+								<MenuItem key={index} value={index}>
+									{name}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
 					<ToggleButtonGroup
 						value={showWeek ? 'week' : 'month'}
 						exclusive
 						onChange={(_, value) => value && setShowWeek(value === 'week')}
-						sx={{
-							border: '1px solid rgba(180, 234, 241, 1)',
-							borderRadius: '16px',
-						}}
+						sx={{ borderRadius: 2, border: '1px solid #B4EAF1' }}
 					>
 						<ToggleButton
 							value='week'
-							sx={{
-								bgcolor: showWeek ? 'rgba(235, 249, 251, 1)' : 'white',
-								borderRadius: '16px 0 0 16px',
-								width: 96,
-								py: 2,
-								border: 'none',
-							}}
+							sx={{ borderRadius: '16px 0 0 16px', width: 96 }}
 						>
-							{lang === 'uz' ? langUz.week : langRu.week}
+							{currentLang.week}
 						</ToggleButton>
 						<ToggleButton
 							value='month'
-							sx={{
-								bgcolor: !showWeek ? 'rgba(235, 249, 251, 1)' : 'white',
-								borderRadius: '0 16px 16px 0',
-								width: 96,
-								py: 2,
-								border: 'none',
-							}}
+							sx={{ borderRadius: '0 16px 16px 0', width: 96 }}
 						>
-							{lang === 'uz' ? langUz.month : langRu.month}
+							{currentLang.month}
 						</ToggleButton>
 					</ToggleButtonGroup>
 				</Box>
 			</Box>
+
 			<Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flex: 1 }}>
 				<Box
 					sx={{
 						width: showWeek ? '33%' : '100%',
 						display: 'flex',
 						justifyContent: 'center',
-						alignItems: 'center',
 					}}
 				>
-					{showWeek ? (
-						<MyChart informationArray={getWeekLateData(allLate)} />
-					) : (
-						<MyChart informationArray={getWeekLateData(allLate)} month={2} />
-					)}
+					<MyChart
+						informationArray={showWeek ? weekLate : monthLate}
+						month={showWeek ? undefined : month}
+						onBarClick={handleBarClick}
+					/>
 				</Box>
+
 				<Box
-					sx={{
-						display: 'flex',
-						flexDirection: 'column',
-						gap: 3,
-						ml: 'auto',
-					}}
+					sx={{ display: 'flex', flexDirection: 'column', gap: 3, ml: 'auto' }}
 				>
-					<Card
-						sx={{
-							borderRadius: '16px',
-							boxShadow: '0 4px 20px rgba(149, 157, 165, 0.2)',
-							p: '12px 16px',
-							width: 288,
-						}}
-					>
-						<Typography sx={{ fontSize: 18, fontWeight: 500 }}>
-							{lang === 'uz' ? langUz.lostHoursPerDay : langRu.lostHoursPerDay}
+					<Card sx={{ borderRadius: 4, p: 2, width: 288 }}>
+						<Typography fontSize={18} fontWeight={500}>
+							{currentLang.lostHoursPerDay}
 						</Typography>
-						<Typography sx={{ fontSize: 36, fontWeight: 600 }}>
-							12{' '}
-							<Typography
-								component='span'
-								sx={{ fontSize: 20, fontWeight: 400 }}
-							>
-								{lang === 'uz' ? 'soat' : 'час'}
+						<Typography fontSize={36} fontWeight={600}>
+							{todayLate}
+							<Typography component='span' fontSize={20} fontWeight={400}>
+								{lang === 'uz' ? 'daqiqa' : 'минут'}
 							</Typography>
 						</Typography>
 					</Card>
-					<Card
-						sx={{
-							borderRadius: '16px',
-							boxShadow: '0 4px 20px rgba(149, 157, 165, 0.2)',
-							p: '12px 16px',
-							width: 288,
-						}}
-					>
-						<Typography sx={{ fontSize: 18, fontWeight: 500 }}>
-							{lang === 'uz'
-								? langUz.lostHoursPerWeek
-								: langRu.lostHoursPerWeek}
+
+					<Card sx={{ borderRadius: 4, p: 2, width: 288 }}>
+						<Typography fontSize={18} fontWeight={500}>
+							{currentLang.lostHoursPerWeek}
 						</Typography>
-						<Typography sx={{ fontSize: 36, fontWeight: 600 }}>
-							48{' '}
-							<Typography
-								component='span'
-								sx={{ fontSize: 20, fontWeight: 400 }}
-							>
-								{lang === 'uz' ? 'soat' : 'час'}
+						<Typography fontSize={36} fontWeight={600}>
+							{weekLate.reduce((sum, n) => sum + n, 0)}
+							<Typography component='span' fontSize={20} fontWeight={400}>
+								{lang === 'uz' ? 'daqiqa' : 'минут'}
 							</Typography>
 						</Typography>
 					</Card>
 				</Box>
 			</Box>
+
+			<Modal
+				open={modalOpen}
+				onClose={handleClose}
+				aria-labelledby='modal-title'
+				sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+			>
+				<Box
+					sx={{
+						bgcolor: 'background.paper',
+						borderRadius: 2,
+						boxShadow: 24,
+						p: 4,
+						maxWidth: 400,
+						width: '100%',
+						maxHeight: '80vh',
+						overflowY: 'auto',
+					}}
+				>
+					<Typography id='modal-title' variant='h6' component='h2' mb={2}>
+						{currentLang.latenessDetails} {selectedDate}
+					</Typography>
+					<List>
+						{lateDetails.length > 0 ? (
+							lateDetails.map((item, index) => (
+								<ListItem key={index}>
+									<ListItemText
+										primary={item.name}
+										secondary={`${item.lateTime} ${
+											lang === 'uz' ? 'daqiqa' : 'минут'
+										}`}
+									/>
+								</ListItem>
+							))
+						) : (
+							<Typography>{currentLang.noLatenessData}</Typography>
+						)}
+					</List>
+				</Box>
+			</Modal>
 		</Card>
 	)
 }
+
 export default CheckLate

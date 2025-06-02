@@ -7,9 +7,10 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 
 interface IPieChartProps {
 	dataObject: Record<string, number>
+	onSegmentClick?: (emotion: string) => void // Добавляем проп для клика
 }
 
-const MyPieChart = ({ dataObject }: IPieChartProps) => {
+const MyPieChart = ({ dataObject, onSegmentClick }: IPieChartProps) => {
 	const labels = Object.keys(dataObject)
 	const dataValues = Object.values(dataObject)
 
@@ -39,6 +40,13 @@ const MyPieChart = ({ dataObject }: IPieChartProps) => {
 				display: false,
 				position: 'right',
 			},
+		},
+		onClick: (event, elements) => {
+			if (elements.length > 0 && onSegmentClick) {
+				const index = elements[0].index
+				const emotion = labels[index]
+				onSegmentClick(emotion)
+			}
 		},
 	}
 
@@ -85,4 +93,5 @@ const MyPieChart = ({ dataObject }: IPieChartProps) => {
 		</Box>
 	)
 }
+
 export default MyPieChart
