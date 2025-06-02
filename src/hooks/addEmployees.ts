@@ -1,23 +1,18 @@
-import { Box, Typography, Button } from '@mui/material'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import useLang from '../lang/lang'
-import { langRu, langUz } from '../lang/language'
-import UserPage from './userPage'
-import { useState } from 'react'
-import type { IEmployees } from '../types/types'
-import type { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 import pb from '../lib/pocketbase'
+import type { IEmployees } from '../types/types'
 
-const AddEmployees = () => {
-	const { lang } = useLang()
+export const useEmployee = () => {
 	const navigate = useNavigate()
+	const { id } = useParams<{ id: string }>()
 	const [array, setArray] = useState<IEmployees | null>(null)
 	const [download, setDownload] = useState(false)
-	const { id } = useParams<{ id: string }>()
 	const [tempDate, setTempDate] = useState<Dayjs | null>(null)
 	const [tempMinutes, setTempMinutes] = useState('')
 	const [img, setImg] = useState<string | null>(null)
+
 	const formatDateFields = (data: IEmployees) => ({
 		...data,
 		birthday: data.birthday || '',
@@ -25,6 +20,50 @@ const AddEmployees = () => {
 		ExpirationDate: data.ExpirationDate || '',
 		IssueDate: data.IssueDate || '',
 	})
+
+	const getUser = async (id: string) => {
+		try {
+			const info = await pb.collection('employees').getOne(id)
+			setArray(info as unknown as IEmployees)
+			setImg(pb.files.getURL(info, info.image) || null)
+		} catch (error) {
+			alert(`Ошибка загрузки данных: ${JSON.stringify(error)}`)
+		}
+	}
+
+	useEffect(() => {
+		if (id) {
+			getUser(id)
+		} else {
+			setArray({
+				fullName: '',
+				gender: 'Мужчина',
+				passport: '',
+				birthday: '',
+				birthPlace: '',
+				PassportIssued: '',
+				IssuedBy: '',
+				ExpirationDate: '',
+				IssueDate: '',
+				NationalityCode: '',
+				Nationality: '',
+				birthCode: '',
+				Email: '',
+				phone: '',
+				Department: '',
+				job: '',
+				image: '',
+				imageUrl: '',
+				PINFL: '',
+				CountryCode: '',
+				where: '',
+				mood: '',
+				whenlate: '{}',
+			})
+			setImg(null)
+			setDownload(true)
+		}
+	}, [id])
 
 	const updateUser = async () => {
 		if (!array || !id) {
@@ -40,7 +79,6 @@ const AddEmployees = () => {
 			}
 			updatedArray = { ...array, whenlate: JSON.stringify(whenlate) }
 		}
-		console.log('Updating with:', formatDateFields(updatedArray))
 		try {
 			await pb
 				.collection('employees')
@@ -49,14 +87,12 @@ const AddEmployees = () => {
 			setTempDate(null)
 			setTempMinutes('')
 		} catch (error) {
-			console.error('Error updating user:', error)
 			alert(`Ошибка при обновлении: ${JSON.stringify(error)}`)
 		}
 	}
 
 	const createUser = async () => {
 		if (!array) {
-			console.log('No array')
 			alert('Заполните данные сотрудника')
 			return
 		}
@@ -66,7 +102,6 @@ const AddEmployees = () => {
 				...formatDateFields(array),
 				whenlate: array.whenlate || '{}',
 			}
-			console.log('Creating with:', formattedArray)
 			Object.entries(formattedArray).forEach(([key, value]) => {
 				if (key !== 'image' && value !== undefined) {
 					formData.append(key, value as string)
@@ -83,44 +118,21 @@ const AddEmployees = () => {
 		}
 	}
 
-	return (
-		<>
-			<Box
-				sx={{
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'space-between',
-					mb: 2,
-				}}
-				onClick={() => navigate('/base')}
-			>
-				<Typography
-					variant='h6'
-					fontWeight={500}
-					sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-				>
-					<ArrowBackIcon />
-					{lang === 'uz' ? langUz.back : langRu.back}
-				</Typography>
-				<Button variant='contained' onClick={id ? updateUser : createUser}>
-					{id ? 'Сохранить' : 'Добавить'}
-				</Button>
-			</Box>
-
-			<UserPage
-				array={array}
-				setArray={setArray}
-				download={download}
-				id={id}
-				tempDate={tempDate}
-				setDownload={setDownload}
-				setTempDate={setTempDate}
-				tempMinutes={tempMinutes}
-				setTempMinutes={setTempMinutes}
-				img={img}
-				setImg={setImg}
-			/>
-		</>
-	)
+	return {
+		array,
+		setArray,
+		download,
+		setDownload,
+		tempDate,
+		setTempDate,
+		tempMinutes,
+		setTempMinutes,
+		img,
+		setImg,
+		id,
+		updateUser,
+		createUser,
+		navigate,
+	}
 }
-export default AddEmployees
+export default useEmployee

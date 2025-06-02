@@ -53,6 +53,7 @@ export const langRu: { [key: string]: string } = {
 	addEmployees: 'Добавить сотрудников',
 	fullInfo: 'Полная информация',
 	settings: 'Настройки',
+	back: 'назад',
 }
 export const langUz: { [key: string]: string } = {
 	image: 'Rasm',
@@ -109,4 +110,5 @@ export const langUz: { [key: string]: string } = {
 	addEmployees: 'Xodim qoʻshish',
 	fullInfo: 'Toʻliq maʼlumot',
 	settings: 'Sozlamalar',
+	back: 'ortga qaytish',
 }

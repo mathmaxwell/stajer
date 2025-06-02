@@ -7,7 +7,7 @@ import Register from './components/register'
 import AddEmployees from './pages/addEmployees'
 import Base from './pages/base'
 import Monitoring from './pages/monitoring'
-import UserId from './pages/userId'
+import EmployeeForm from './components/EmployeeForm'
 function App() {
 	return (
 		<>
@@ -40,7 +40,7 @@ function App() {
 					path='/user-id/:id'
 					element={
 						<ProtectedRoute>
-							<UserId />
+							<EmployeeForm />
 						</ProtectedRoute>
 					}
 				/>

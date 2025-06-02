@@ -92,7 +92,7 @@ const CheckLate = () => {
 				boxShadow: '0 4px 20px rgba(149, 157, 165, 0.2)',
 				bgcolor: '#fff',
 				p: '12px 20px',
-				height: '100%',
+				height: '400px',
 				display: 'flex',
 				flexDirection: 'column',
 				justifyContent: 'space-between',

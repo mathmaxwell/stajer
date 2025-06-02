@@ -7,7 +7,7 @@ ChartJS.register(ChartDataLabels)
 
 interface IInformationArray {
 	informationArray: number[]
-	month?: number // Число от 0 (январь) до 11 (декабрь)
+	month?: number
 }
 
 const monthNames = [
@@ -30,16 +30,13 @@ const getDaysInMonth = (month: number, year: number = 2025) => {
 }
 
 const MyChart = ({ informationArray, month }: IInformationArray) => {
-	// По умолчанию — неделя
 	let labels: string[]
 	let datasetLabel: string
 
 	if (month === undefined || month === null) {
-		// График для недели
 		labels = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
 		datasetLabel = 'Значения за неделю'
 	} else {
-		// График для месяца
 		const daysInMonth = getDaysInMonth(month)
 		labels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString())
 		datasetLabel = `Значения за ${monthNames[month]}`
@@ -102,7 +99,7 @@ const MyChart = ({ informationArray, month }: IInformationArray) => {
 		},
 		elements: {
 			bar: {
-				borderRadius: 4, // Скругленные углы баров
+				borderRadius: 4,
 			},
 		},
 	}

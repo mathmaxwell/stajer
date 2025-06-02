@@ -27,7 +27,6 @@ const PageOne = ({
 			value={array?.[field] ? dayjs(array[field], 'DD-MM-YYYY', true) : null}
 			onChange={(newValue: Dayjs | null) => {
 				const formatted = newValue ? newValue.format('DD-MM-YYYY') : ''
-				console.log(`Selected ${field}:`, formatted)
 				updateArray(field, formatted)
 			}}
 			format='DD-MM-YYYY'

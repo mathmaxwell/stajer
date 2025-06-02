@@ -30,11 +30,41 @@ const HeaderPage = ({
 }) => {
 	const updateArray = (field: keyof IEmployees, value: string | File) =>
 		setArray(prev => {
-			const newArray = prev ? { ...prev, [field]: value } : null
-			console.log('HeaderPage Updated:', field, value, newArray)
-			return newArray
+			// Если prev — null, возвращаем начальный объект с обновлённым полем
+			if (!prev) {
+				return {
+					fullName: '',
+					gender: 'Мужчина',
+					passport: '',
+					birthday: '',
+					birthPlace: '',
+					PassportIssued: '',
+					IssuedBy: '',
+					ExpirationDate: '',
+					IssueDate: '',
+					NationalityCode: '',
+					Nationality: '',
+					birthCode: '',
+					Email: '',
+					phone: '',
+					Department: '',
+					job: '',
+					image: '',
+					imageUrl: '',
+					PINFL: '',
+					CountryCode: '',
+					where: '',
+					mood: '',
+					whenlate: '{}',
+					[field]: value, // Обновляем указанное поле
+				} as IEmployees
+			}
+			// Если prev существует, обновляем только указанное поле
+			return {
+				...prev,
+				[field]: value,
+			}
 		})
-
 	return (
 		<Box sx={{ display: 'flex', gap: 4 }}>
 			{download ? (
@@ -112,7 +142,10 @@ const HeaderPage = ({
 					label='ФИО'
 					value={array?.fullName || ''}
 					fullWidth
-					onChange={e => updateArray('fullName', e.target.value)}
+					onChange={e => {
+						console.log('Введено:', e.target.value)
+						updateArray('fullName', e.target.value)
+					}}
 				/>
 				<Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
 					<FormControl fullWidth>
