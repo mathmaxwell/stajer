@@ -57,7 +57,7 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{array.slice(page * 10, page * 10 + 9).map(human => (
+					{array.slice(page * 9, page * 9 + 9).map(human => (
 						<TableRow
 							key={human.passport}
 							onClick={() => navigate(`/user-id/${human.id}`)}
@@ -138,19 +138,19 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 				<Button
 					variant='outlined'
 					onClick={() =>
-						page < Math.floor(array.length / 9) && setPage(prev => prev + 1)
+						page < Math.ceil(array.length / 9) - 1 && setPage(prev => prev + 1)
 					}
-					disabled={page >= Math.floor(array.length / 9)}
+					disabled={page >= Math.ceil(array.length / 9) - 1}
 					sx={{
 						px: 3,
 						py: 1.5,
 						borderRadius: '16px',
 						color:
-							page < Math.floor(array.length / 9)
+							page < Math.ceil(array.length / 9) - 1
 								? 'rgba(100, 109, 126, 1)'
 								: 'rgba(191, 195, 202, 1)',
 						borderColor:
-							page < Math.floor(array.length / 9)
+							page < Math.ceil(array.length / 9) - 1
 								? 'rgba(6, 186, 209, 1)'
 								: 'rgba(180, 234, 241, 1)',
 						fontSize: 17,
