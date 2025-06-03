@@ -12,17 +12,18 @@ const Monitoring = () => {
 				flexDirection: 'column',
 				justifyContent: 'space-between',
 				width: '100%',
-				gap: 2,
+				gap: {
+					sm: 1,
+					lg: 2,
+				},
 				height: '100%',
 				bgcolor: '#eee',
-				p: 0,
 			}}
 		>
 			<Paper
 				elevation={3}
 				sx={{
 					borderRadius: '16px',
-					bgcolor: '#eee',
 					border: 'none',
 					outline: 'none',
 				}}

@@ -20,24 +20,18 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 	const navigate = useNavigate()
 	const { baseList } = baseStory()
 	const { lang } = useLang()
+	const isSmallScreen = window.innerWidth < 1200
+	const rowsPerPage = isSmallScreen ? 8 : 9
 
-	// Сбрасываем страницу при изменении длины массива
 	useEffect(() => {
 		setPage(0)
 	}, [array.length])
 
-	// Проверяем, чтобы страница не превышала доступные
 	useEffect(() => {
-		if (array.length > 0 && page * 9 >= array.length) {
-			setPage(Math.max(0, Math.ceil(array.length / 9) - 1))
+		if (array.length > 0 && page * rowsPerPage >= array.length) {
+			setPage(Math.max(0, Math.ceil(array.length / rowsPerPage) - 1))
 		}
-	}, [array.length, page])
-
-	// Логирование для проверки
-	useEffect(() => {
-		console.log(`Current page: ${page}, Array length: ${array.length}`)
-		console.log(`Displayed users:`, array.slice(page * 9, page * 9 + 9))
-	}, [page, array])
+	}, [array.length, page, rowsPerPage])
 
 	if (!array.length) {
 		return (
@@ -94,45 +88,47 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{array.slice(page * 9, page * 9 + 9).map(human => (
-						<TableRow
-							key={human.id} // Заменил human.passport на human.id для уникальности
-							onClick={() => navigate(`/user-id/${human.id}`)}
-							sx={{
-								cursor: 'pointer',
-								'&:hover': { bgcolor: 'grey.100' },
-								'& .MuiTableCell-root': {
-									textAlign: 'center',
-									py: 2,
-								},
-							}}
-						>
-							{baseList.map((item, idx) =>
-								item === 'image' ? (
-									<TableCell key={1000 - idx}>
-										<Box sx={{ display: 'flex', justifyContent: 'center' }}>
-											<Box
-												component='img'
-												src={human.imageUrl}
-												alt={item}
-												sx={{ width: 40, height: 40, borderRadius: '50%' }}
-											/>
-										</Box>
-									</TableCell>
-								) : item === 'where' ? (
-									<TableCell key={idx}>
-										<Typography>
-											{(lang === 'uz' ? langUz : langRu)[human['where']]}
-										</Typography>
-									</TableCell>
-								) : (
-									<TableCell key={idx}>
-										<Typography>{human[item]}</Typography>
-									</TableCell>
-								)
-							)}
-						</TableRow>
-					))}
+					{array
+						.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+						.map(human => (
+							<TableRow
+								key={human.id}
+								onClick={() => navigate(`/user-id/${human.id}`)}
+								sx={{
+									cursor: 'pointer',
+									'&:hover': { bgcolor: 'grey.100' },
+									'& .MuiTableCell-root': {
+										textAlign: 'center',
+										py: 2,
+									},
+								}}
+							>
+								{baseList.map((item, idx) =>
+									item === 'image' ? (
+										<TableCell key={1000 - idx}>
+											<Box sx={{ display: 'flex', justifyContent: 'center' }}>
+												<Box
+													component='img'
+													src={human.imageUrl}
+													alt={item}
+													sx={{ width: 40, height: 40, borderRadius: '50%' }}
+												/>
+											</Box>
+										</TableCell>
+									) : item === 'where' ? (
+										<TableCell key={idx}>
+											<Typography>
+												{(lang === 'uz' ? langUz : langRu)[human['where']]}
+											</Typography>
+										</TableCell>
+									) : (
+										<TableCell key={idx}>
+											<Typography>{human[item]}</Typography>
+										</TableCell>
+									)
+								)}
+							</TableRow>
+						))}
 				</TableBody>
 			</Table>
 
@@ -175,19 +171,20 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 				<Button
 					variant='outlined'
 					onClick={() =>
-						page < Math.ceil(array.length / 9) - 1 && setPage(prev => prev + 1)
+						page < Math.ceil(array.length / rowsPerPage) - 1 &&
+						setPage(prev => prev + 1)
 					}
-					disabled={page >= Math.ceil(array.length / 9) - 1}
+					disabled={page >= Math.ceil(array.length / rowsPerPage) - 1}
 					sx={{
 						px: 3,
 						py: 1.5,
 						borderRadius: '16px',
 						color:
-							page < Math.ceil(array.length / 9) - 1
+							page < Math.ceil(array.length / rowsPerPage) - 1
 								? 'rgba(100, 109, 126, 1)'
 								: 'rgba(191, 195, 202, 1)',
 						borderColor:
-							page < Math.ceil(array.length / 9) - 1
+							page < Math.ceil(array.length / rowsPerPage) - 1
 								? 'rgba(6, 186, 209, 1)'
 								: 'rgba(180, 234, 241, 1)',
 						fontSize: 17,

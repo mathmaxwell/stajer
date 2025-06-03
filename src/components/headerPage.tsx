@@ -30,7 +30,6 @@ const HeaderPage = ({
 }) => {
 	const updateArray = (field: keyof IEmployees, value: string | File) =>
 		setArray(prev => {
-			// Если prev — null, возвращаем начальный объект с обновлённым полем
 			if (!prev) {
 				return {
 					fullName: '',
@@ -56,10 +55,10 @@ const HeaderPage = ({
 					where: '',
 					mood: '',
 					whenlate: '{}',
-					[field]: value, // Обновляем указанное поле
+					[field]: value,
 				} as IEmployees
 			}
-			// Если prev существует, обновляем только указанное поле
+
 			return {
 				...prev,
 				[field]: value,
@@ -71,7 +70,7 @@ const HeaderPage = ({
 				<label
 					style={{
 						width: 200,
-						height: 250,
+						height: 200,
 						border: '2px dashed',
 						borderColor: 'grey.400',
 						borderRadius: '12px',
@@ -109,10 +108,9 @@ const HeaderPage = ({
 					src={img}
 					sx={{
 						width: 200,
-						height: 250,
+						height: { sm: 200, lg: 250 },
 						borderRadius: '12px',
 						cursor: 'pointer',
-						objectFit: 'cover',
 					}}
 					onClick={() => setDownload(true)}
 				/>
@@ -120,7 +118,7 @@ const HeaderPage = ({
 				<Box
 					sx={{
 						width: 200,
-						height: 250,
+						height: { sm: 200, lg: 250 },
 						display: 'flex',
 						alignItems: 'center',
 						justifyContent: 'center',
@@ -136,7 +134,12 @@ const HeaderPage = ({
 				</Box>
 			)}
 			<Box
-				sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 5 }}
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					width: '100%',
+					gap: { sm: 3, lg: 5 },
+				}}
 			>
 				<TextField
 					label='ФИО'

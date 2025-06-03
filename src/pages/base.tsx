@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Box, Stack, Paper } from '@mui/material'
+import { Box, Paper } from '@mui/material'
 
 import employees from '../employees/employees'
 import baseStory from '../employees/baseStory'

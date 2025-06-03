@@ -52,7 +52,7 @@ const MyChart = ({
 			dates.push(date.toLocaleDateString('ru-RU').split('.').join('-'))
 		}
 	} else {
-		// Для месяца
+
 		const daysInMonth = getDaysInMonth(month)
 		labels = Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString())
 		datasetLabel = `Значения за ${monthNames[month]}`

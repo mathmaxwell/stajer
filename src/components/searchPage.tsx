@@ -27,16 +27,44 @@ const SearchPage = ({
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'space-between',
-				p: 2.5,
+				p: {
+					xs: 1.5, 
+					sm: 2,
+					md: 2.5,
+				},
+				flexDirection: {
+					xs: 'column', 
+					sm: 'row', 
+				},
+				gap: {
+					xs: 1.5, 
+					sm: 0,
+				},
 			}}
 		>
 			<IconButton
 				onClick={() => setSettings(true)}
-				sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					gap: 1,
+					width: {
+						xs: '100%', 
+						sm: 'auto',
+					},
+					justifyContent: {
+						xs: 'flex-start', 
+						sm: 'center',
+					},
+				}}
 			>
 				<Typography
 					sx={{
-						fontSize: 18,
+						fontSize: {
+							xs: 16, 
+							sm: 17,
+							md: 18,
+						},
 						fontWeight: 500,
 						textTransform: 'uppercase',
 					}}
@@ -55,6 +83,15 @@ const SearchPage = ({
 				sx={{
 					'& .MuiOutlinedInput-root': {
 						borderRadius: '16px',
+						height: {
+							xs: 40, 
+							sm: 48,
+						},
+					},
+					width: {
+						xs: '100%', 
+						sm: '40%', 
+						md: 'auto',
 					},
 				}}
 			/>
@@ -65,6 +102,22 @@ const SearchPage = ({
 				sx={{
 					borderRadius: '16px',
 					textTransform: 'none',
+					width: {
+						xs: '100%', 
+						sm: 'auto',
+					},
+					px: {
+						xs: 2, 
+						sm: 3,
+					},
+					py: {
+						xs: 1, 
+						sm: 1.5,
+					},
+					fontSize: {
+						xs: 14, 
+						sm: 16,
+					},
 				}}
 			>
 				{lang === 'uz' ? langUz.addEmployees : langRu.addEmployees}
@@ -72,4 +125,5 @@ const SearchPage = ({
 		</Box>
 	)
 }
+
 export default SearchPage

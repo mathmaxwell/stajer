@@ -5,7 +5,6 @@ import { langRu, langUz } from '../lang/language'
 import { useNavigate } from 'react-router-dom'
 import { Box, Card, Typography } from '@mui/material'
 import useStore from '../elements/setHomePage'
-//adaptiva sm, md
 interface ICards {
 	about: string
 	image: string

@@ -38,8 +38,8 @@ const PageOne = ({
 			sx={{
 				display: 'grid',
 				gridTemplateColumns: '1fr 1fr',
-				gap: 5,
-				my: 5,
+				gap: { sm: 2.5, lg: 5 },
+				my: { sm: 2.5, lg: 5 },
 			}}
 		>
 			{renderDatePicker('Паспорт выдан', 'PassportIssued')}

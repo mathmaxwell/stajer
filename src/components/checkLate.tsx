@@ -172,8 +172,14 @@ const CheckLate = () => {
 				borderRadius: 4,
 				boxShadow: 3,
 				bgcolor: '#fff',
-				p: 2,
-				height: 400,
+				p: {
+					sm: 1,
+					lg: 2,
+				},
+				height: {
+					sm: 350,
+					lg: 400,
+				},
 				display: 'flex',
 				flexDirection: 'column',
 				justifyContent: 'space-between',
@@ -199,7 +205,13 @@ const CheckLate = () => {
 						</Typography>
 					</Box>
 				</Box>
-				<Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+				<Box
+					sx={{
+						display: 'flex',
+						gap: { sm: 1.5, lg: 2 },
+						alignItems: 'center',
+					}}
+				>
 					<FormControl sx={{ minWidth: 120 }}>
 						<InputLabel id='month-select-label'>Месяц</InputLabel>
 						<Select
@@ -223,7 +235,7 @@ const CheckLate = () => {
 						value={showWeek ? 'week' : 'month'}
 						exclusive
 						onChange={(_, value) => value && setShowWeek(value === 'week')}
-						sx={{ borderRadius: 2, border: '1px solid #B4EAF1' }}
+						sx={{ borderRadius: 16, border: '1px solid #B4EAF1' }}
 					>
 						<ToggleButton
 							value='week'
@@ -259,7 +271,13 @@ const CheckLate = () => {
 				<Box
 					sx={{ display: 'flex', flexDirection: 'column', gap: 3, ml: 'auto' }}
 				>
-					<Card sx={{ borderRadius: 4, p: 2, width: 288 }}>
+					<Card
+						sx={{
+							borderRadius: 4,
+							p: { sm: 1.5, lg: 2 },
+							width: { sm: 250, lg: 288 },
+						}}
+					>
 						<Typography fontSize={18} fontWeight={500}>
 							{currentLang.lostHoursPerDay}
 						</Typography>
@@ -271,7 +289,13 @@ const CheckLate = () => {
 						</Typography>
 					</Card>
 
-					<Card sx={{ borderRadius: 4, p: 2, width: 288 }}>
+					<Card
+						sx={{
+							borderRadius: 4,
+							p: { sm: 1.5, lg: 2 },
+							width: { sm: 250, lg: 288 },
+						}}
+					>
 						<Typography fontSize={18} fontWeight={500}>
 							{currentLang.lostHoursPerWeek}
 						</Typography>
