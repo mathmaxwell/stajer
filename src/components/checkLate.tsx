@@ -177,8 +177,7 @@ const CheckLate = () => {
 					lg: 2,
 				},
 				height: {
-					sm: 350,
-					lg: 400,
+					sm: 'auto',
 				},
 				display: 'flex',
 				flexDirection: 'column',
@@ -320,7 +319,7 @@ const CheckLate = () => {
 					<Card
 						sx={{
 							borderRadius: 4,
-							p: { sm: 1.5, lg: 2 },
+							p: { xs: 1.5, lg: 2 },
 							width: { sm: 250, lg: 288 },
 						}}
 					>

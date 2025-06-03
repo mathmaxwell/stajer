@@ -168,13 +168,13 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 				</Box>
 			)}
 
-			{/* Пагинация */}
 			<Box
 				sx={{
 					display: 'flex',
 					alignItems: 'center',
 					justifyContent: 'center',
-					gap: 5,
+					gap: { xs: 2, sm: 5 },
+					marginX: 'auto',
 					mt: 2,
 					position: isMobile ? 'static' : 'absolute',
 					bottom: isMobile ? 'auto' : 28,

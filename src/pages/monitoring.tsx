@@ -11,8 +11,7 @@ const Monitoring = () => {
 				display: 'flex',
 				flexDirection: 'column',
 				justifyContent: {
-					xs: 'center',
-					lg: 'space-between',
+					xs: 'flex-start',
 				},
 				width: '100%',
 				gap: {

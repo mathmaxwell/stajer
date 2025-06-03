@@ -27,7 +27,7 @@ const AddEmployees = () => {
 	const [tempDate, setTempDate] = useState<Dayjs | null>(null)
 	const [tempMinutes, setTempMinutes] = useState('')
 	const [img, setImg] = useState<string | null>(null)
-	const [openConfirm, setOpenConfirm] = useState(false) // состояние модального окна
+	const [openConfirm, setOpenConfirm] = useState(false)
 
 	const formatDateFields = (data: IEmployees) => ({
 		...data,
@@ -118,14 +118,20 @@ const AddEmployees = () => {
 					display: 'flex',
 					alignItems: 'center',
 					justifyContent: 'space-between',
-					mb: 2,
+					p: 2,
+					mt: 2,
 				}}
 				onClick={() => navigate('/base')}
 			>
 				<Typography
 					variant='h6'
 					fontWeight={500}
-					sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+					sx={{
+						display: 'flex',
+						alignItems: 'center',
+						gap: 1,
+						cursor: 'pointer',
+					}}
 				>
 					<ArrowBackIcon />
 					{lang === 'uz' ? langUz.back : langRu.back}

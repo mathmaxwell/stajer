@@ -79,8 +79,15 @@ const CheckEmotion = () => {
 				p: 0,
 			}}
 		>
-			<Card sx={{ flex: 1, borderRadius: 4, boxShadow: 3 }}>
-				<CardContent sx={{ position: 'relative' }}>
+			<Card
+				sx={{
+					flex: 1,
+					borderRadius: 4,
+					boxShadow: 3,
+					position: 'relative',
+				}}
+			>
+				<CardContent>
 					<Typography variant='h6' fontWeight={500}>
 						{currentLang.employeesMood}
 					</Typography>
