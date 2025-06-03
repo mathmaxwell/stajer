@@ -65,7 +65,13 @@ const HeaderPage = ({
 			}
 		})
 	return (
-		<Box sx={{ display: 'flex', gap: 4 }}>
+		<Box
+			sx={{
+				display: 'flex',
+				flexDirection: { xs: 'column', sm: 'row' },
+				gap: 4,
+			}}
+		>
 			{download ? (
 				<label
 					style={{
@@ -138,7 +144,7 @@ const HeaderPage = ({
 					display: 'flex',
 					flexDirection: 'column',
 					width: '100%',
-					gap: { sm: 3, lg: 5 },
+					gap: { xs: 3, lg: 5 },
 				}}
 			>
 				<TextField
@@ -150,7 +156,16 @@ const HeaderPage = ({
 						updateArray('fullName', e.target.value)
 					}}
 				/>
-				<Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
+				<Box
+					sx={{
+						display: 'grid',
+						gridTemplateColumns: {
+							xs: 'repeat(1, 1fr)',
+							sm: 'repeat(2, 1fr)',
+						},
+						gap: 2,
+					}}
+				>
 					<FormControl fullWidth>
 						<InputLabel id='gender-label'>Пол</InputLabel>
 						<Select

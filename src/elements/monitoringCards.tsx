@@ -31,7 +31,11 @@ const CardsComponent = () => {
 			sx={{
 				bgcolor: '#eee',
 				display: 'grid',
-				gridTemplateColumns: { xs: 'repeat(3, 1fr)', md: 'repeat(6, 1fr)' },
+				gridTemplateColumns: {
+					xs: 'repeat(1, 1fr)',
+					sm: 'repeat(2, 1fr)',
+					md: 'repeat(6, 1fr)',
+				},
 				width: '100%',
 				borderRadius: '16px',
 				border: 'none',

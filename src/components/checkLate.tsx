@@ -188,6 +188,7 @@ const CheckLate = () => {
 			<Box
 				sx={{
 					display: 'flex',
+					flexDirection: { xs: 'column', sm: 'row' },
 					justifyContent: 'space-between',
 					alignItems: 'center',
 				}}
@@ -270,14 +271,16 @@ const CheckLate = () => {
 				sx={{
 					display: 'flex',
 					alignItems: 'center',
+					justifyContent: 'space-between',
 					gap: 3,
 					flex: 1,
 				}}
 			>
 				<Box
 					sx={{
-						width: showWeek ? '33%' : '100%',
+						width: showWeek ? { xs: '100%', sm: '80%', md: '50%' } : '100%',
 						display: 'flex',
+						marginX: 'auto',
 						justifyContent: 'center',
 					}}
 				>

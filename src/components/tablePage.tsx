@@ -9,6 +9,9 @@ import {
 	TableCell,
 	TableHead,
 	TableRow,
+	Card,
+	Avatar,
+	useMediaQuery,
 } from '@mui/material'
 import useLang from '../lang/lang'
 import { langRu, langUz } from '../lang/language'
@@ -20,12 +23,9 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 	const navigate = useNavigate()
 	const { baseList } = baseStory()
 	const { lang } = useLang()
-	const rowsPerPage =
-		window.innerWidth < 600
-			? 7
-			: window.innerWidth >= 600 && window.innerWidth < 1200
-			? 8
-			: 9
+	const isMobile = useMediaQuery('(max-width:600px)')
+	const rowsPerPage = isMobile ? 7 : window.innerWidth < 1200 ? 8 : 9
+
 	useEffect(() => {
 		setPage(0)
 	}, [array.length])
@@ -55,6 +55,8 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 		)
 	}
 
+	const langData = lang === 'uz' ? langUz : langRu
+
 	return (
 		<Box
 			sx={{
@@ -64,87 +66,120 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 				height: '100%',
 				bgcolor: '#fff',
 				position: 'relative',
+				p: isMobile ? 2 : 0,
 			}}
 		>
-			<Table sx={{ borderRadius: '16px', overflow: 'hidden' }}>
-				<TableHead>
-					<TableRow
-						sx={{
-							bgcolor: 'rgba(235, 249, 251, 1)',
-							'& .MuiTableCell-root': {
-								fontSize: 16,
-								fontWeight: 400,
-								textAlign: 'center',
-								color: 'grey.600',
-								fontSizeAdjust: '0.5',
-								py: 2,
-							},
-						}}
-					>
-						{baseList.map((item, index) => (
-							<TableCell key={index}>
-								<Typography variant='subtitle1' fontWeight={600}>
-									{(lang === 'uz' ? langUz : langRu)[item]}
-								</Typography>
-							</TableCell>
-						))}
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{array
-						.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-						.map(human => (
+			{isMobile ? (
+				array
+					.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+					.map(human => (
+						<Card
+							key={human.id}
+							sx={{
+								mb: 2,
+								p: 2,
+								cursor: 'pointer',
+								'&:hover': { bgcolor: 'grey.100' },
+							}}
+							onClick={() => navigate(`/user-id/${human.id}`)}
+						>
+							<Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+								<Avatar src={human.imageUrl} sx={{ width: 56, height: 56 }} />
+								<Box>
+									<Typography fontWeight={600}>{human.fullName}</Typography>
+									<Typography color='text.secondary'>{human.job}</Typography>
+									<Typography color='text.secondary'>
+										{human.birthday}
+									</Typography>
+									<Typography color='text.secondary'>
+										{langData[human.where]}
+									</Typography>
+								</Box>
+							</Box>
+						</Card>
+					))
+			) : (
+				<Box sx={{ overflowX: 'auto' }}>
+					<Table sx={{ borderRadius: '16px', minWidth: 600 }}>
+						<TableHead>
 							<TableRow
-								key={human.id}
-								onClick={() => navigate(`/user-id/${human.id}`)}
 								sx={{
-									cursor: 'pointer',
-									'&:hover': { bgcolor: 'grey.100' },
+									bgcolor: 'rgba(235, 249, 251, 1)',
 									'& .MuiTableCell-root': {
+										fontSize: 16,
+										fontWeight: 400,
 										textAlign: 'center',
+										color: 'grey.600',
 										py: 2,
 									},
 								}}
 							>
-								{baseList.map((item, idx) =>
-									item === 'image' ? (
-										<TableCell key={1000 - idx}>
-											<Box sx={{ display: 'flex', justifyContent: 'center' }}>
-												<Box
-													component='img'
-													src={human.imageUrl}
-													alt={item}
-													sx={{ width: 40, height: 40, borderRadius: '50%' }}
-												/>
-											</Box>
-										</TableCell>
-									) : item === 'where' ? (
-										<TableCell key={idx}>
-											<Typography>
-												{(lang === 'uz' ? langUz : langRu)[human['where']]}
-											</Typography>
-										</TableCell>
-									) : (
-										<TableCell key={idx}>
-											<Typography>{human[item]}</Typography>
-										</TableCell>
-									)
-								)}
+								{baseList.map((item, index) => (
+									<TableCell key={index}>
+										<Typography variant='subtitle1' fontWeight={600}>
+											{langData[item]}
+										</Typography>
+									</TableCell>
+								))}
 							</TableRow>
-						))}
-				</TableBody>
-			</Table>
+						</TableHead>
+						<TableBody>
+							{array
+								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+								.map(human => (
+									<TableRow
+										key={human.id}
+										onClick={() => navigate(`/user-id/${human.id}`)}
+										sx={{
+											cursor: 'pointer',
+											'&:hover': { bgcolor: 'grey.100' },
+											'& .MuiTableCell-root': {
+												textAlign: 'center',
+												py: 2,
+											},
+										}}
+									>
+										{baseList.map((item, idx) =>
+											item === 'image' ? (
+												<TableCell key={1000 - idx}>
+													<Box
+														sx={{ display: 'flex', justifyContent: 'center' }}
+													>
+														<Avatar
+															src={human.imageUrl}
+															sx={{ width: 40, height: 40 }}
+														/>
+													</Box>
+												</TableCell>
+											) : item === 'where' ? (
+												<TableCell key={idx}>
+													<Typography>{langData[human['where']]}</Typography>
+												</TableCell>
+											) : (
+												<TableCell key={idx}>
+													<Typography>{human[item]}</Typography>
+												</TableCell>
+											)
+										)}
+									</TableRow>
+								))}
+						</TableBody>
+					</Table>
+				</Box>
+			)}
 
+			{/* Пагинация */}
 			<Box
 				sx={{
 					display: 'flex',
 					alignItems: 'center',
 					justifyContent: 'center',
 					gap: 5,
-					position: 'absolute',
-					bottom: 28,
-					left: '50%',
-					transform: 'translateX(-50%)',
+					mt: 2,
+					position: isMobile ? 'static' : 'absolute',
+					bottom: isMobile ? 'auto' : 28,
+					left: isMobile ? 'auto' : '50%',
+					transform: isMobile ? 'none' : 'translateX(-50%)',
 				}}
 			>
 				<Button
@@ -152,7 +187,6 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 					onClick={() => page && setPage(prev => prev - 1)}
 					disabled={!page}
 					sx={{
-						textWrap: 'nowrap',
 						px: 3,
 						py: 1.5,
 						borderRadius: '16px',
@@ -165,7 +199,7 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 						textTransform: 'none',
 					}}
 				>
-					{lang === 'uz' ? langUz.prev : langRu.prev}
+					{langData.prev}
 				</Button>
 
 				<Typography sx={{ fontSize: 17, fontWeight: 600 }}>
@@ -180,7 +214,6 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 					}
 					disabled={page >= Math.ceil(array.length / rowsPerPage) - 1}
 					sx={{
-						textWrap: 'nowrap',
 						px: 3,
 						py: 1.5,
 						borderRadius: '16px',
@@ -197,7 +230,7 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 						textTransform: 'none',
 					}}
 				>
-					{lang === 'uz' ? langUz.next : langRu.next}
+					{langData.next}
 				</Button>
 			</Box>
 		</Box>

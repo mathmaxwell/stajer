@@ -37,9 +37,9 @@ const PageOne = ({
 		<Box
 			sx={{
 				display: 'grid',
-				gridTemplateColumns: '1fr 1fr',
-				gap: { sm: 2.5, lg: 5 },
-				my: { sm: 2.5, lg: 5 },
+				gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+				gap: { xs: 2.5, lg: 5 },
+				my: { xs: 2.5, lg: 5 },
 			}}
 		>
 			{renderDatePicker('Паспорт выдан', 'PassportIssued')}

@@ -70,6 +70,7 @@ const CheckEmotion = () => {
 		<Box
 			sx={{
 				display: 'flex',
+				flexDirection: { xs: 'column', sm: 'row' },
 				gap: {
 					xs: 1,
 					lg: 3,
@@ -92,7 +93,7 @@ const CheckEmotion = () => {
 							mt: { xs: 0, lg: 2 },
 						}}
 					>
-						<Box >
+						<Box>
 							<MyPieChart
 								dataObject={emotions}
 								onSegmentClick={handleSegmentClick}

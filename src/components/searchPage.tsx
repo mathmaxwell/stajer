@@ -45,7 +45,10 @@ const SearchPage = ({
 			<IconButton
 				onClick={() => setSettings(true)}
 				sx={{
-					display: 'flex',
+					display: {
+						xs: 'none',
+						sm: 'flex',
+					},
 					alignItems: 'center',
 					gap: {
 						xs: 0,
