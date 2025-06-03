@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
 	Box,
 	Button,
@@ -20,6 +20,43 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 	const navigate = useNavigate()
 	const { baseList } = baseStory()
 	const { lang } = useLang()
+
+	// Сбрасываем страницу при изменении длины массива
+	useEffect(() => {
+		setPage(0)
+	}, [array.length])
+
+	// Проверяем, чтобы страница не превышала доступные
+	useEffect(() => {
+		if (array.length > 0 && page * 9 >= array.length) {
+			setPage(Math.max(0, Math.ceil(array.length / 9) - 1))
+		}
+	}, [array.length, page])
+
+	// Логирование для проверки
+	useEffect(() => {
+		console.log(`Current page: ${page}, Array length: ${array.length}`)
+		console.log(`Displayed users:`, array.slice(page * 9, page * 9 + 9))
+	}, [page, array])
+
+	if (!array.length) {
+		return (
+			<Box
+				sx={{
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
+					height: '100%',
+				}}
+			>
+				<Typography>
+					{lang === 'uz'
+						? 'Foydalanuvchilar topilmadi'
+						: 'Пользователи не найдены'}
+				</Typography>
+			</Box>
+		)
+	}
 
 	return (
 		<Box
@@ -59,7 +96,7 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 				<TableBody>
 					{array.slice(page * 9, page * 9 + 9).map(human => (
 						<TableRow
-							key={human.passport}
+							key={human.id} // Заменил human.passport на human.id для уникальности
 							onClick={() => navigate(`/user-id/${human.id}`)}
 							sx={{
 								cursor: 'pointer',
@@ -164,4 +201,5 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 		</Box>
 	)
 }
+
 export default TablePage
