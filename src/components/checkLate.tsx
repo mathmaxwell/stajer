@@ -194,9 +194,20 @@ const CheckLate = () => {
 			>
 				<Box>
 					<Typography variant='h6'>{currentLang.monitoringLateness}</Typography>
-					<Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-						<Typography sx={{ fontSize: 36, fontWeight: 600 }}>
-							{todayLate} мин
+					<Box
+						sx={{
+							display: 'flex',
+							alignItems: 'center',
+							gap: { xs: 1, sm: 2, md: 3, lg: 4 },
+						}}
+					>
+						<Typography
+							sx={{
+								fontSize: { xs: 30, sm: 36 },
+								fontWeight: 600,
+							}}
+						>
+							{todayLate}мин
 						</Typography>
 						<Typography color='text.secondary'>
 							{currentLang.latenessInLastDays_part1}
@@ -208,11 +219,13 @@ const CheckLate = () => {
 				<Box
 					sx={{
 						display: 'flex',
-						gap: { sm: 1.5, lg: 2 },
+						flexDirection: { xs: 'column', md: 'row' },
+						gap: { xs: 1.5, lg: 2 },
 						alignItems: 'center',
+						marginTop: { xs: '10px' },
 					}}
 				>
-					<FormControl sx={{ minWidth: 120 }}>
+					<FormControl sx={{ minWidth: 120, order: { xs: 2, md: 0 } }}>
 						<InputLabel id='month-select-label'>Месяц</InputLabel>
 						<Select
 							labelId='month-select-label'
@@ -253,7 +266,14 @@ const CheckLate = () => {
 				</Box>
 			</Box>
 
-			<Box sx={{ display: 'flex', alignItems: 'center', gap: 3, flex: 1 }}>
+			<Box
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					gap: 3,
+					flex: 1,
+				}}
+			>
 				<Box
 					sx={{
 						width: showWeek ? '33%' : '100%',
@@ -269,7 +289,12 @@ const CheckLate = () => {
 				</Box>
 
 				<Box
-					sx={{ display: 'flex', flexDirection: 'column', gap: 3, ml: 'auto' }}
+					sx={{
+						display: { xs: 'none', md: 'flex' },
+						flexDirection: 'column',
+						gap: 3,
+						ml: 'auto',
+					}}
 				>
 					<Card
 						sx={{

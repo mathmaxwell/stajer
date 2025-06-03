@@ -10,10 +10,13 @@ const Monitoring = () => {
 			sx={{
 				display: 'flex',
 				flexDirection: 'column',
-				justifyContent: 'space-between',
+				justifyContent: {
+					xs: 'center',
+					lg: 'space-between',
+				},
 				width: '100%',
 				gap: {
-					sm: 1,
+					xs: 1,
 					lg: 2,
 				},
 				height: '100%',

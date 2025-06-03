@@ -20,9 +20,12 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 	const navigate = useNavigate()
 	const { baseList } = baseStory()
 	const { lang } = useLang()
-	const isSmallScreen = window.innerWidth < 1200
-	const rowsPerPage = isSmallScreen ? 8 : 9
-
+	const rowsPerPage =
+		window.innerWidth < 600
+			? 7
+			: window.innerWidth >= 600 && window.innerWidth < 1200
+			? 8
+			: 9
 	useEffect(() => {
 		setPage(0)
 	}, [array.length])
@@ -149,6 +152,7 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 					onClick={() => page && setPage(prev => prev - 1)}
 					disabled={!page}
 					sx={{
+						textWrap: 'nowrap',
 						px: 3,
 						py: 1.5,
 						borderRadius: '16px',
@@ -176,6 +180,7 @@ const TablePage = ({ array }: { array: IEmployees[] }) => {
 					}
 					disabled={page >= Math.ceil(array.length / rowsPerPage) - 1}
 					sx={{
+						textWrap: 'nowrap',
 						px: 3,
 						py: 1.5,
 						borderRadius: '16px',

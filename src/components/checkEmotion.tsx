@@ -6,6 +6,7 @@ import { langRu, langUz } from '../lang/language'
 import employees from '../employees/employees'
 import type { IEmployees } from '../types/types'
 import MyPieChart from '../elements/MyPieChart'
+
 import {
 	Box,
 	Card,
@@ -70,7 +71,7 @@ const CheckEmotion = () => {
 			sx={{
 				display: 'flex',
 				gap: {
-					sm: 1,
+					xs: 1,
 					lg: 3,
 				},
 				width: '100%',
@@ -78,7 +79,7 @@ const CheckEmotion = () => {
 			}}
 		>
 			<Card sx={{ flex: 1, borderRadius: 4, boxShadow: 3 }}>
-				<CardContent>
+				<CardContent sx={{ position: 'relative' }}>
 					<Typography variant='h6' fontWeight={500}>
 						{currentLang.employeesMood}
 					</Typography>
@@ -87,10 +88,11 @@ const CheckEmotion = () => {
 							display: 'flex',
 							justifyContent: 'space-between',
 							alignItems: 'flex-end',
-							mt: { sm: 0, lg: 2 },
+
+							mt: { xs: 0, lg: 2 },
 						}}
 					>
-						<Box>
+						<Box >
 							<MyPieChart
 								dataObject={emotions}
 								onSegmentClick={handleSegmentClick}
@@ -103,6 +105,7 @@ const CheckEmotion = () => {
 								navigate('base/all-mood')
 								setPage('base')
 							}}
+							sx={{ position: 'absolute', right: '15px' }}
 						>
 							{currentLang.viewAll}
 						</Button>
@@ -145,7 +148,7 @@ const CheckEmotion = () => {
 							navigate('/base/all-birthday')
 							setPage('base')
 						}}
-						sx={{ mt: { sm: 0, lg: 2 }, alignSelf: 'center' }}
+						sx={{ mt: { xs: 0, lg: 2 }, alignSelf: 'center' }}
 					>
 						{currentLang.viewAll}
 					</Button>

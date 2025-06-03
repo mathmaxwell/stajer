@@ -7,7 +7,7 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 
 interface IPieChartProps {
 	dataObject: Record<string, number>
-	onSegmentClick?: (emotion: string) => void // Добавляем проп для клика
+	onSegmentClick?: (emotion: string) => void
 }
 
 const MyPieChart = ({ dataObject, onSegmentClick }: IPieChartProps) => {

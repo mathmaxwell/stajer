@@ -47,12 +47,12 @@ const ProtectedRoute = ({ children }: Props) => {
 				height: '100vh',
 				display: 'flex',
 				flexDirection: {
+					xs: 'column',
 					lg: 'row',
-					md: 'column',
 				},
 				alignItems: 'center',
 				justifyContent: 'space-between',
-				gap: 2,
+				gap: { xs: 1.5, lg: 2 },
 				bgcolor: '#eee',
 				boxShadow: 1,
 			}}
@@ -61,24 +61,24 @@ const ProtectedRoute = ({ children }: Props) => {
 				sx={{
 					bgcolor: 'white',
 					height: {
-						lg: '100%',
-						md: 100,
+						md: 'auto',
+						lg: '100vh',
 					},
 					borderRadius: '16px',
 					width: {
-						lg: 300,
-						md: '100%',
+						xs: '100%',
+						lg: '300px',
 					},
-					padding: 2.5,
+					padding: { sm: 1, lg: 2 },
 					display: 'flex',
 					flexDirection: {
 						lg: 'column',
-						md: 'row',
+						xs: 'row',
 					},
-					alignItems: 'start',
+					alignItems: 'center',
 					justifyContent: {
 						lg: 'space-between',
-						md: 'center',
+						xs: 'center',
 					},
 					gap: 2,
 				}}
@@ -90,7 +90,7 @@ const ProtectedRoute = ({ children }: Props) => {
 						gap: 2,
 						mr: {
 							lg: 0,
-							md: 'auto',
+							xs: 'auto',
 						},
 					}}
 				>
@@ -98,13 +98,24 @@ const ProtectedRoute = ({ children }: Props) => {
 						component='img'
 						src={fullFase}
 						alt='face'
-						sx={{ width: 40, height: 40 }}
+						sx={{
+							width: 40,
+							height: 40,
+							display: {
+								xs: 'none',
+								md: 'block',
+							},
+						}}
 					/>
 					<Typography
 						sx={{
 							color: 'rgba(6, 186, 209, 1)',
 							fontSize: 14,
 							fontWeight: 600,
+							display: {
+								xs: 'none',
+								md: 'block',
+							},
 							lineHeight: 1.2,
 						}}
 					>
@@ -125,7 +136,7 @@ const ProtectedRoute = ({ children }: Props) => {
 						fontSize: 17,
 						display: {
 							lg: 'block',
-							md: 'none',
+							xs: 'none',
 						},
 					}}
 				>
@@ -137,10 +148,11 @@ const ProtectedRoute = ({ children }: Props) => {
 						navigate('/')
 					}}
 					sx={{
+						textWrap: 'nowrap',
 						display: 'flex',
 						alignItems: 'center',
 						justifyContent: 'flex-start',
-						gap: 2,
+						gap: { xs: 0, lg: 2 },
 						p: 1.5,
 						width: {
 							lg: '100%',
@@ -175,6 +187,7 @@ const ProtectedRoute = ({ children }: Props) => {
 						navigate('/base')
 					}}
 					sx={{
+						textWrap: 'nowrap',
 						display: 'flex',
 						alignItems: 'center',
 						width: {
@@ -182,7 +195,7 @@ const ProtectedRoute = ({ children }: Props) => {
 							md: '200px',
 						},
 						justifyContent: 'flex-start',
-						gap: 2,
+						gap: { xs: 0, lg: 2 },
 						p: 1.5,
 						borderRadius: '8px',
 						bgcolor: page === 'base' ? 'rgba(235, 249, 251, 1)' : 'white',
@@ -215,7 +228,7 @@ const ProtectedRoute = ({ children }: Props) => {
 						},
 						ml: {
 							lg: 0,
-							md: 'auto',
+							xs: 'auto',
 						},
 						display: 'flex',
 						alignItems: 'center',

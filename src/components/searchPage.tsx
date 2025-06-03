@@ -28,16 +28,16 @@ const SearchPage = ({
 				alignItems: 'center',
 				justifyContent: 'space-between',
 				p: {
-					xs: 1.5, 
-					sm: 2,
+					xs: 0.5,
+					sm: 1.5,
 					md: 2.5,
 				},
 				flexDirection: {
-					xs: 'column', 
-					sm: 'row', 
+					xs: 'column',
+					sm: 'row',
 				},
 				gap: {
-					xs: 1.5, 
+					xs: 1.5,
 					sm: 0,
 				},
 			}}
@@ -47,13 +47,16 @@ const SearchPage = ({
 				sx={{
 					display: 'flex',
 					alignItems: 'center',
-					gap: 1,
+					gap: {
+						xs: 0,
+						sm: 1,
+					},
 					width: {
-						xs: '100%', 
+						xs: '100%',
 						sm: 'auto',
 					},
 					justifyContent: {
-						xs: 'flex-start', 
+						xs: 'flex-start',
 						sm: 'center',
 					},
 				}}
@@ -61,7 +64,7 @@ const SearchPage = ({
 				<Typography
 					sx={{
 						fontSize: {
-							xs: 16, 
+							xs: 16,
 							sm: 17,
 							md: 18,
 						},
@@ -84,13 +87,13 @@ const SearchPage = ({
 					'& .MuiOutlinedInput-root': {
 						borderRadius: '16px',
 						height: {
-							xs: 40, 
+							xs: 40,
 							sm: 48,
 						},
 					},
 					width: {
-						xs: '100%', 
-						sm: '40%', 
+						xs: '100%',
+						sm: '40%',
 						md: 'auto',
 					},
 				}}
@@ -100,22 +103,23 @@ const SearchPage = ({
 				variant='contained'
 				onClick={() => navigate('/add-employees')}
 				sx={{
+					textWrap: 'nowrap',
 					borderRadius: '16px',
 					textTransform: 'none',
 					width: {
-						xs: '100%', 
+						xs: '100%',
 						sm: 'auto',
 					},
 					px: {
-						xs: 2, 
-						sm: 3,
+						xs: 1,
+						md: 2,
 					},
 					py: {
-						xs: 1, 
+						xs: 1,
 						sm: 1.5,
 					},
 					fontSize: {
-						xs: 14, 
+						xs: 14,
 						sm: 16,
 					},
 				}}

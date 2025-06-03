@@ -31,7 +31,7 @@ const CardsComponent = () => {
 			sx={{
 				bgcolor: '#eee',
 				display: 'grid',
-				gridTemplateColumns: 'repeat(6, 1fr)',
+				gridTemplateColumns: { xs: 'repeat(3, 1fr)', md: 'repeat(6, 1fr)' },
 				width: '100%',
 				borderRadius: '16px',
 				border: 'none',
@@ -61,14 +61,14 @@ const CardsComponent = () => {
 							borderRadius: '16px',
 							display: 'flex',
 							flexDirection: 'column',
-							p: 2,
+							p: { xs: 1.5, md: 2 },
 							justifyContent: 'space-between',
 						}}
 					>
 						<Typography
 							sx={{
-								fontWeight: 500,
-								fontSize: 18,
+								fontWeight: { xs: 400, md: 500 },
+								fontSize: { xs: 16, md: 18 },
 							}}
 						>
 							{lang === 'uz' ? langUz[card.about] : langRu[card.about]}
@@ -86,8 +86,10 @@ const CardsComponent = () => {
 						>
 							<Typography
 								sx={{
-									fontWeight: 600,
-									fontSize: 36,
+									fontWeight: { xs: 500, md: 600 },
+									fontSize: { xs: 28, md: 36 },
+									ml: { xs: 'auto', md: 0 },
+									mr: { xs: '10px', md: 0 },
 								}}
 							>
 								{card.number}
@@ -95,7 +97,11 @@ const CardsComponent = () => {
 							<Box
 								component='img'
 								src={card.image}
-								sx={{ width: 40, height: 40 }}
+								sx={{
+									width: { sm: 30, md: 40 },
+									height: { sm: 30, md: 40 },
+									display: { xs: 'none', md: 'block' },
+								}}
 							/>
 						</Box>
 					</Card>
