@@ -1,54 +1,127 @@
-# React + TypeScript + Vite
+Tad-Industry-Workers
+Tad-Industry-Workers — это интуитивно понятное веб-приложение, разработанное для руководителей компаний, чтобы эффективно отслеживать присутствие сотрудников, управлять опозданиями и вести полную базу данных о персонале. Оно значительно упрощает процесс мониторинга рабочего времени и управления данными сотрудников.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+О проекте
+Проект Tad-Industry-Workers создан для решения одной из ключевых задач любого руководителя — эффективного контроля за дисциплиной и учёта рабочего времени сотрудников. Он позволяет руководителям отслеживать время прихода и ухода сотрудников, фиксировать опоздания, генерировать отчёты по ним, а также хранить и изменять подробную информацию о каждом сотруднике.
 
-Currently, two official plugins are available:
+Основные цели проекта:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Мониторинг опозданий: Точное отслеживание времени прибытия сотрудников и расчёт времени опоздания.
+Управление данными сотрудников: Централизованное хранение полной информации о каждом сотруднике, включая паспортные данные, контакты, отдел и должность.
+Гибкое редактирование: Возможность легко изменять или добавлять данные о сотрудниках.
+Удобный интерфейс: Предоставление руководителю простого и понятного инструмента для работы.
+Возможности
+Отслеживание времени прихода сотрудников.
+Автоматический расчёт и фиксация опозданий.
+Просмотр подробного отчёта по опозданиям.
+Полная информация о сотрудниках (имя, пол, паспортные данные, контакты, должность и т.д.).
+Возможность добавления, изменения и удаления данных о сотрудниках.
+Установка и запуск
+Для запуска Tad-Industry-Workers вам потребуется установить несколько компонентов и выполнить определённые шаги.
 
-## Expanding the ESLint configuration
+Предварительные требования
+Node.js (рекомендуется последняя стабильная версия)
+npm (обычно поставляется с Node.js)
+Visual Studio Code (или любой другой текстовый редактор)
+PocketBase (специально для вашей операционной системы)
+Установка кода проекта
+Клонирование репозитория:
+Bash
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+git clone git@github.com:mathmaxwell/stajer.git
+Переход в директорию проекта:
+Bash
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+cd stajer
+Настройка PocketBase
+PocketBase используется как бэкенд для проекта. Обратите внимание, что версия в репозитории предназначена для macOS.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Скачайте PocketBase: Если у вас не macOS, скачайте подходящую версию PocketBase с официального сайта: https://pocketbase.io/docs/
+Подготовка директории PocketBase:
+Распакуйте скачанный архив.
+Создайте новую папку в корне вашего проекта stajer с названием pocketbase.
+Переместите все извлеченные файлы из архива PocketBase в эту новую папку pocketbase.
+Запуск PocketBase:
+Откройте терминал и перейдите в директорию pocketbase:
+Bash
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+cd pocketbase
+Запустите PocketBase:
+Bash
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+./pocketbase serve
+PocketBase будет запущен на http://127.0.0.1:8090. Откройте этот адрес в браузере.
+Пройдите процесс регистрации для создания учётной записи администратора.
+Создание коллекции employees: В интерфейсе PocketBase создайте новую коллекцию с названием employees и следующими полями. Убедитесь, что image имеет тип File, а все остальные - Text.
+image (тип: File)
+fullName (тип: Text)
+gender (тип: Text)
+passport (тип: Text)
+PINFL (тип: Text)
+birthday (тип: Text)
+birthPlace (тип: Text)
+PassportIssued (тип: Text)
+IssuedBy (тип: Text)
+IssueDate (тип: Text)
+ExpirationDate (тип: Text)
+Nationality (тип: Text)
+NationalityCode (тип: Text)
+CountryCode (тип: Text)
+birthCode (тип: Text)
+Email (тип: Text)
+phone (тип: Text)
+Department (тип: Text)
+job (тип: Text)
+mood (тип: Text)
+where (тип: Text)
+id (тип: Text)
+whenlateMap (тип: Text)
+whenlate (тип: Text)
+Настройка подключения к PocketBase
+Создайте файл .env.local: В корневой директории вашего проекта stajer создайте файл с именем .env.local.
+Добавьте переменные окружения: Внутрь файла .env.local добавьте следующие строки:
+BROWSER=none
+VITE_PB_URL=http://127.0.0.1:8090
+Запуск React-приложения
+После того как PocketBase настроен и запущен, а .env.local создан:
+
+Установка зависимостей: В корневой директории проекта stajer (где находится package.json) выполните:
+Bash
+
+npm i
+Запуск приложения:
+Bash
+
+npm run dev
+Это запустит React-приложение, обычно на http://localhost:5173/ (или другом доступном порту).
+Использование
+После запуска приложения вы сможете взаимодействовать с ним через веб-интерфейс. Вам будут доступны функции для:
+
+Просмотра списка сотрудников.
+Добавления новых сотрудников с полной информацией.
+Редактирования существующих данных сотрудников.
+Отслеживания опозданий и просмотра соответствующей статистики.
+Скриншоты
+Примеры интерфейса и функциональности приложения можно найти в папке screenshots в корневом каталоге проекта.
+
+Дорожная карта
+Мы постоянно работаем над улучшением Tad-Industry-Workers. Вот некоторые из наших планов на будущее:
+
+Расширение функционала отчётов по опозданиям.
+Интеграция с системами учёта рабочего времени (при наличии).
+Улучшение пользовательского интерфейса и опыта.
+Добавление функционала для массовой загрузки данных сотрудников.
+Вклад
+Приветствуются любые вклады в развитие проекта! Если вы хотите помочь, пожалуйста, следуйте этим рекомендациям:
+
+Сделайте форк репозитория.
+Создайте новую ветку (git checkout -b feature/AmazingFeature).
+Зафиксируйте свои изменения (git commit -m 'Add some AmazingFeature').
+Отправьте изменения в удаленный репозиторий (git push origin feature/AmazingFeature).
+Откройте Pull Request.
+Лицензия
+Проект распространяется под лицензией MIT. Дополнительную информацию см. в файле LICENSE.
+
+Контакты
+MathMaxwell - https://github.com/mathmaxwell
+Ссылка на проект: https://github.com/mathmaxwell/stajer
